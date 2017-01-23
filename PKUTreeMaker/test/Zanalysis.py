@@ -10,9 +10,9 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
 if runOnMC:
-   process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'#'80X_mcRun2_asymptotic_2016_miniAODv2' #'76X_mcRun2_asymptotic_v12' # '74X_mcRun2_asymptotic_v2'#'for version2 miniaod
+   process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'#(1/23/2017) '80X_mcRun2_asymptotic_2016_miniAODv2_v1'#'80X_mcRun2_asymptotic_2016_miniAODv2' #'76X_mcRun2_asymptotic_v12' # '74X_mcRun2_asymptotic_v2'#'for version2 miniaod
 elif not(runOnMC):
-   process.GlobalTag.globaltag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
+   process.GlobalTag.globaltag = '80X_dataRun2_2016SeptRepro_v5'#(1/23/2017)'80X_dataRun2_Prompt_ICHEP16JEC_v0'
 ##########					                                                             
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD2015#ETmiss_filters
 hltFiltersProcessName = 'RECO'
