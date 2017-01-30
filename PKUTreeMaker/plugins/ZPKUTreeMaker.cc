@@ -1102,8 +1102,8 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                }
 
 
-               if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.050 && photon_sieie[ip]<0.0102 && chiso<1.37 && nhiso<(1.06 + (0.014*(*photons)[ip].pt()+0.000019*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(0.28+0.0053*(*photons)[ip].pt())) {ismedium_photon=1;}
-               if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.050 && photon_sieie[ip]<0.0268 && chiso<1.10 && nhiso<(2.69 + (0.0139*(*photons)[ip].pt()+0.000025*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(0.39+0.0034*(*photons)[ip].pt())) {ismedium_photon=1;} //https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2#SPRING15_selections_25_ns
+               if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.0396 && photon_sieie[ip]<0.01022 && chiso<0.441 && nhiso<(2.725 + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(2.571+0.0047*(*photons)[ip].pt())) {ismedium_photon=1;}
+               if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.0219 && photon_sieie[ip]<0.03001 && chiso<0.442 && nhiso<(1.715 + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(3.863+0.0034*(*photons)[ip].pt())) {ismedium_photon=1;} //https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2#SPRING15_selections_25_ns
 
                if(ismedium_photon==1 && deltaR(phosc_eta,phosc_phi,etalep1,philep1) > 0.7 && deltaR(phosc_eta,phosc_phi,etalep2,philep2) > 0.7) { 
                    if(ip==0) {photonet=(*photons)[ip].pt(); iphoton=ip;}
@@ -1115,8 +1115,8 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 //////////////////////////////////for fake photon study, store photon without sieie cut
 ////Inverting loose ID
-            if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.050 && !(photon_sieie[ip]<0.0102&&chiso<4. && nhiso<(4. + (0.014*(*photons)[ip].pt()+0.000019*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(4.+0.0053*(*photons)[ip].pt()))&&chiso<20. && nhiso<5.*(4. + (0.014*(*photons)[ip].pt()+0.000019*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<5.*(4.+0.0053*(*photons)[ip].pt())) {ismedium_photon_f=1;}
-            if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.050 && !(photon_sieie[ip]<0.0274 && chiso<3. && nhiso<(15. + (0.0139*(*photons)[ip].pt()+0.000025*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(4.+0.0034*(*photons)[ip].pt())) && chiso<15. && nhiso<5.*(15. + (0.0139*(*photons)[ip].pt()+0.000025*(*photons)[ip].pt()*(*photons)[ip].pt())&&phoiso<5.*(4.+0.0034*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
+            if(passEleVetonew && (*photons)[ip].isEB() && (*photons)[ip].hadTowOverEm()<0.0396 && !(photon_sieie[ip]<0.01022&&chiso<4. && nhiso<(6. + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(6.+0.0047*(*photons)[ip].pt()))&&chiso<20. && nhiso<5.*(6. + (0.0148*(*photons)[ip].pt()+0.000017*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<5.*(6.+0.0047*(*photons)[ip].pt())) {ismedium_photon_f=1;}
+            if(passEleVetonew && (*photons)[ip].isEE() && (*photons)[ip].hadTowOverEm()<0.0219 && !(photon_sieie[ip]<0.03001 && chiso<4. && nhiso<(5. + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())) && phoiso<(7.5+0.0034*(*photons)[ip].pt())) && chiso<20. && nhiso<5.*(5. + (0.0163*(*photons)[ip].pt()+0.000014*(*photons)[ip].pt()*(*photons)[ip].pt())&&phoiso<5.*(7.5+0.0034*(*photons)[ip].pt()))) {ismedium_photon_f=1;}
             if(ismedium_photon_f==1 && deltaR(phosc_eta,phosc_phi,etalep1,philep1) > 0.7 && deltaR(phosc_eta,phosc_phi,etalep2,philep2) > 0.7) { 
                 if(ip==0) {photonet_f=(*photons)[ip].pt(); iphoton_f=ip;}
                 if((*photons)[ip].pt()>photonet_f) {
