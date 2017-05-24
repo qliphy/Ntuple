@@ -242,13 +242,27 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 
 		// JEC uncertainty
+
+		reco::Candidate::LorentzVector smearedP4_JEC_up =jetCorrFactor*rawJetP4;
+                reco::Candidate::LorentzVector smearedP4_JEC_down =jetCorrFactor*rawJetP4;
+
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
 		jecUnc.setJetEta(jet.eta());
 		double jecUncertainty_up = jecUnc.getUncertainty(true);//true = UP, false = DOWN //Meng Lu
 
+		jetParam.setJetPt(jetCorrFactor*(1+jecUncertainty_up)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
+                float PtResolution_JEC_up = resolution.getResolution(jetParam);
+                float JERSF_JEC_up        = res_sf.getScaleFactor(jetParam);
+		smearedP4_JEC_up *= get_JER_corr(JERSF_JEC_up, isMC, jet, coneSize_, PtResolution_JEC_up, jetCorrFactor);
+
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
 		jecUnc.setJetEta(jet.eta());
 		double jecUncertainty_down = jecUnc.getUncertainty(false);//true = UP, false = DOWN //Meng Lu
+
+		jetParam.setJetPt(jetCorrFactor*(1-jecUncertainty_down)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
+                float PtResolution_JEC_down = resolution.getResolution(jetParam);
+                float JERSF_JEC_down        = res_sf.getScaleFactor(jetParam);
+		smearedP4_JEC_down *= get_JER_corr(JERSF_JEC_down, isMC, jet, coneSize_, PtResolution_JEC_down, jetCorrFactor);
 
 		// JEC l1 uncertainty
 		jecUnc.setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
@@ -305,10 +319,10 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 		// JER
 		jetParam.setJetPt(jetCorrFactor*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);// resolution depend on pt and eta, SF depend on eta and rho, so the parameter should be initialized with three parameters
-		float PtResolution = resolution.getResolution(jetParam);
+		float PtResolution_JER = resolution.getResolution(jetParam);
 		float JERSF        = res_sf.getScaleFactor(jetParam);
-		float JERSFUp      = res_sf.getScaleFactor(jetParam, Variation::UP);
-		float JERSFDown    = res_sf.getScaleFactor(jetParam, Variation::DOWN);
+		float JERSFUp_JER      = res_sf.getScaleFactor(jetParam, Variation::UP);
+		float JERSFDown_JER    = res_sf.getScaleFactor(jetParam, Variation::DOWN);
 		double corrEx_MET_JER = 0;
 		double corrEx_MET_JER_up = 0;
 		double corrEx_MET_JER_down = 0;
@@ -326,23 +340,23 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		reco::Candidate::LorentzVector smearedP4_down_raw =jetCorrFactor*rawJetP4;
 
 		reco::Candidate::LorentzVector smearedP4 =jetCorrFactor*rawJetP4;
-		reco::Candidate::LorentzVector smearedP4_up =jetCorrFactor*rawJetP4;
-		reco::Candidate::LorentzVector smearedP4_down =jetCorrFactor*rawJetP4;
+		reco::Candidate::LorentzVector smearedP4_JER_up =jetCorrFactor*rawJetP4;
+		reco::Candidate::LorentzVector smearedP4_JER_down =jetCorrFactor*rawJetP4;
 
-		smearedP4 *= get_JER_corr(JERSF, isMC, jet, coneSize_, PtResolution, jetCorrFactor);
-		smearedP4_up *= get_JER_corr(JERSFUp, isMC, jet, coneSize_, PtResolution, jetCorrFactor);
-		smearedP4_down *= get_JER_corr(JERSFDown, isMC, jet, coneSize_, PtResolution, jetCorrFactor);
+		smearedP4 *= get_JER_corr(JERSF, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
+		smearedP4_JER_up *= get_JER_corr(JERSFUp_JER, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
+		smearedP4_JER_down *= get_JER_corr(JERSFDown_JER, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
 			
 
 		corrEx_MET_JER -= (smearedP4.px() - smearedP4_raw.px());
-		corrEx_MET_JER_up -= (smearedP4_up.px() - smearedP4_up_raw.px());
-		corrEx_MET_JER_down -= (smearedP4_down.px() - smearedP4_down_raw.px());
+		corrEx_MET_JER_up -= (smearedP4_JER_up.px() - smearedP4_up_raw.px());
+		corrEx_MET_JER_down -= (smearedP4_JER_down.px() - smearedP4_down_raw.px());
 		corrEy_MET_JER -= (smearedP4.py() - smearedP4_raw.py());
-		corrEy_MET_JER_up -= (smearedP4_up.py() - smearedP4_up_raw.py());
-		corrEy_MET_JER_down -= (smearedP4_down.py() - smearedP4_down_raw.py());
+		corrEy_MET_JER_up -= (smearedP4_JER_up.py() - smearedP4_up_raw.py());
+		corrEy_MET_JER_down -= (smearedP4_JER_down.py() - smearedP4_down_raw.py());
 		corrSumEt_MET_JER += (smearedP4.Et() - smearedP4_raw.Et());
-		corrSumEt_MET_JER_up += (smearedP4_up.Et() - smearedP4_up_raw.Et());
-		corrSumEt_MET_JER_down += (smearedP4_down.Et() - smearedP4_down_raw.Et());
+		corrSumEt_MET_JER_up += (smearedP4_JER_up.Et() - smearedP4_up_raw.Et());
+		corrSumEt_MET_JER_down += (smearedP4_JER_down.Et() - smearedP4_down_raw.Et());
 
 
 		jet.addUserFloat("jecUncertainty_up",   jecUncertainty_up);
@@ -358,10 +372,14 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jet.addUserFloat("JERSFDown",    JERSFDown);
 		jet.addUserFloat("SmearedPt",    smearedP4.pt());
 		jet.addUserFloat("SmearedE",     smearedP4.energy());
-		jet.addUserFloat("SmearedPt_up",    smearedP4_up.pt());
-		jet.addUserFloat("SmearedE_up",     smearedP4_up.energy());
-		jet.addUserFloat("SmearedPt_down",    smearedP4_down.pt());
-		jet.addUserFloat("SmearedE_down",     smearedP4_down.energy());
+		jet.addUserFloat("SmearedPt_JER_up",    smearedP4_JER_up.pt());
+		jet.addUserFloat("SmearedE_JER_up",     smearedP4_JER_up.energy());
+		jet.addUserFloat("SmearedPt_JER_down",    smearedP4_JER_down.pt());
+		jet.addUserFloat("SmearedE_JER_down",     smearedP4_JER_down.energy());
+		jet.addUserFloat("SmearedPt_JEC_up",    smearedP4_JEC_up.pt());
+                jet.addUserFloat("SmearedE_JEC_up",     smearedP4_JEC_up.energy());
+                jet.addUserFloat("SmearedPt_JEC_down",    smearedP4_JEC_down.pt());
+                jet.addUserFloat("SmearedE_JEC_down",     smearedP4_JEC_down.energy());
 
 		jet.addUserFloat("corrEx_MET_JEC",     corrEx_MET_JEC);
 		jet.addUserFloat("corrEy_MET_JEC",     corrEy_MET_JEC);
@@ -374,6 +392,7 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jet.addUserFloat("corrSumEt_MET_JEC_down",     corrSumEt_MET_JEC_down);
 
 		jet.addUserFloat("corrEx_MET_JER", corrEx_MET_JER);
+		jet.addUserFloat("corrEx_MET_JER_up", corrEx_MET_JER_up);
 		jet.addUserFloat("corrEx_MET_JER_down", corrEx_MET_JER_down);
 		jet.addUserFloat("corrEy_MET_JER", corrEy_MET_JER);
 		jet.addUserFloat("corrEy_MET_JER_up", corrEy_MET_JER_up);
