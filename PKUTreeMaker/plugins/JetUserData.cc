@@ -366,10 +366,10 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jet.addUserFloat("jetCorrFactor",jetCorrFactor);
 		jet.addUserFloat("jetCorrFactor_l1",jetCorrFactor_l1);
 
-		jet.addUserFloat("PtResolution", PtResolution);
+		jet.addUserFloat("PtResolution_JER", PtResolution_JER);
 		jet.addUserFloat("JERSF",        JERSF);
-		jet.addUserFloat("JERSFUp",      JERSFUp);
-		jet.addUserFloat("JERSFDown",    JERSFDown);
+		jet.addUserFloat("JERSFUp_JER",      JERSFUp_JER);
+		jet.addUserFloat("JERSFDown_JER",    JERSFDown_JER);
 		jet.addUserFloat("SmearedPt",    smearedP4.pt());
 		jet.addUserFloat("SmearedE",     smearedP4.energy());
 		jet.addUserFloat("SmearedPt_JER_up",    smearedP4_JER_up.pt());
