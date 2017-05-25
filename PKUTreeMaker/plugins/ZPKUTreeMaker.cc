@@ -1522,6 +1522,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	std::vector<TLorentzVector*> jets_new;
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
+		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
 		if((*ak4jets)[ik].userFloat("SmearedPt")>tmpjetptcut) {
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);    
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE"));
