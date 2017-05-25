@@ -1538,16 +1538,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
 		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
-		if((*ak4jets)[ik].userFloat("SmearedPt_JECup")>tmpjetptcut) {
+		if((*ak4jets)[ik].userFloat("SmearedPt_JEC_up")>tmpjetptcut) {
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);    
-			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JECup"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JECup"));
+			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JEC_up"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JEC_up"));
 			jets_JEC_up.push_back(dummy);
 			delete dummy;
                         dummy = 0;
 		}   
 		if(ik<6)  {   
-			ak4jet_pt_JEC_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JECup");
-			ak4jet_e_JEC_up[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JECup");
+			ak4jet_pt_JEC_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JEC_up");
+			ak4jet_e_JEC_up[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JEC_up");
 		}
 	}
 	//////----------------------------------------------
@@ -1557,16 +1557,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
 		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
-		if((*ak4jets)[ik].userFloat("SmearedPt_JECdown")>tmpjetptcut) {
+		if((*ak4jets)[ik].userFloat("SmearedPt_JEC_down")>tmpjetptcut) {
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
-			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JECdown"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JECdown"));
+			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JEC_down"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JEC_down"));
 			jets_JEC_down.push_back(dummy);
 			delete dummy;
                         dummy = 0;
 		}
 		if(ik<6)  {
-			ak4jet_pt_JEC_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JECdown");
-			ak4jet_e_JEC_down[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JECdown");
+			ak4jet_pt_JEC_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JEC_down");
+			ak4jet_e_JEC_down[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JEC_down");
 		}
 	}
 	//////----------------------------------------------
@@ -1576,16 +1576,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
 		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
-		if((*ak4jets)[ik].userFloat("SmearedPt_JERup")>tmpjetptcut) {
+		if((*ak4jets)[ik].userFloat("SmearedPt_JER_up")>tmpjetptcut) {
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
-			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JERup"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JERup"));
+			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JER_up"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JER_up"));
 			jets_JER_up.push_back(dummy);
 			delete dummy;
                         dummy = 0;
 		}
 		if(ik<6)  {
-			ak4jet_pt_JER_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JERup");
-			ak4jet_e_JER_up[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JERup");
+			ak4jet_pt_JER_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JER_up");
+			ak4jet_e_JER_up[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JER_up");
 		}
 	}
 	//////----------------------------------------------
@@ -1595,16 +1595,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
 		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
-		if((*ak4jets)[ik].userFloat("SmearedPt_JERdown")>tmpjetptcut) {
+		if((*ak4jets)[ik].userFloat("SmearedPt_JER_down")>tmpjetptcut) {
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
-			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JERdown"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JERdown"));
+			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JER_down"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JER_down"));
 			jets_JER_down.push_back(dummy);
 			delete dummy;
                         dummy = 0;
 		}
 		if(ik<6)  {
-			ak4jet_pt_JER_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JERdown");
-			ak4jet_e_JER_down[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JERdown");
+			ak4jet_pt_JER_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JER_down");
+			ak4jet_e_JER_down[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JER_down");
 		}
 	}
 */
