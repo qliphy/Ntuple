@@ -1543,8 +1543,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);    
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE"));
 			jets_new.push_back(dummy);
-			delete dummy;
-			dummy = 0;
 		}   
 		if(ik<6)  {   
 			ak4jet_pt_new[ik] =  (*ak4jets)[ik].userFloat("SmearedPt");
@@ -1562,8 +1560,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);    
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JEC_up"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JEC_up"));
 			jets_JEC_up.push_back(dummy);
-			delete dummy;
-			dummy = 0;
 		}   
 		if(ik<6)  {   
 			ak4jet_pt_JEC_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JEC_up");
@@ -1581,8 +1577,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JEC_down"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JEC_down"));
 			jets_JEC_down.push_back(dummy);
-			delete dummy;
-			dummy = 0;
 		}
 		if(ik<6)  {
 			ak4jet_pt_JEC_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JEC_down");
@@ -1600,8 +1594,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JER_up"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JER_up"));
 			jets_JER_up.push_back(dummy);
-			delete dummy;
-			dummy = 0;
 		}
 		if(ik<6)  {
 			ak4jet_pt_JER_up[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JER_up");
@@ -1619,8 +1611,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			TLorentzVector *dummy = new TLorentzVector(0,0,0,0);
 			dummy->SetPtEtaPhiE((*ak4jets)[ik].userFloat("SmearedPt_JER_down"), uncorrJet.eta(), uncorrJet.phi(), (*ak4jets)[ik].userFloat("SmearedE_JER_down"));
 			jets_JER_down.push_back(dummy);
-			delete dummy;
-			dummy = 0;
 		}
 		if(ik<6)  {
 			ak4jet_pt_JER_down[ik] =  (*ak4jets)[ik].userFloat("SmearedPt_JER_down");
