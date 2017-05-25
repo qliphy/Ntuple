@@ -539,7 +539,6 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	//jets
 	outTree_->Branch("ak4jet_pt_old"        , ak4jet_pt_old       ,"ak4jet_pt_old[6]/D"       );
 	outTree_->Branch("ak4jet_pt_new"        , ak4jet_pt_new       ,"ak4jet_pt_new[6]/D"       );
-	outTree_->Branch("ak4jet_pt"        , ak4jet_pt       ,"ak4jet_pt[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JEC_up"        , ak4jet_pt_JEC_up       ,"ak4jet_pt_JEC_up[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JEC_down"        , ak4jet_pt_JEC_down       ,"ak4jet_pt_JEC_down[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JER_up"        , ak4jet_pt_JER_up       ,"ak4jet_pt_JER_up[6]/D"       );
@@ -548,7 +547,6 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("ak4jet_phi"        , ak4jet_phi       ,"ak4jet_phi[6]/D"       );
 	outTree_->Branch("ak4jet_e_old"        , ak4jet_e_old       ,"ak4jet_e_old[6]/D"       );
 	outTree_->Branch("ak4jet_e_new"        , ak4jet_e_new       ,"ak4jet_e_new[6]/D"       );
-	outTree_->Branch("ak4jet_e"        , ak4jet_e       ,"ak4jet_e[6]/D"       );
 	outTree_->Branch("ak4jet_e_JEC_up"        , ak4jet_e_JEC_up       ,"ak4jet_e_JEC_up[6]/D"       );
 	outTree_->Branch("ak4jet_e_JEC_down"        , ak4jet_e_JEC_down       ,"ak4jet_e_JEC_down[6]/D"       );
 	outTree_->Branch("ak4jet_e_JER_up"        , ak4jet_e_JER_up       ,"ak4jet_e_JER_up[6]/D"       );
@@ -1942,8 +1940,6 @@ void ZPKUTreeMaker::setDummyValues() {
 		ak4jet_phi[i]=-1e1;
 		ak4jet_e_old[i]=-1e1;
 		ak4jet_e_new[i]=-1e1;
-		ak4jet_pt[i]=-1e1;
-		ak4jet_e[i]=-1e1;
 		ak4jet_pt_JEC_up[i]=-1e1;
 		ak4jet_pt_JEC_down[i]=-1e1;
 		ak4jet_e_JEC_up[i]=-1e1;
