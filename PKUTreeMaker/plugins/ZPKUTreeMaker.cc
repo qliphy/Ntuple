@@ -189,8 +189,8 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 // Marked for debug
 		double useless;
 		// AK4 Jets
-		double ak4jet_pt[6],ak4jet_eta[6],ak4jet_phi[6],ak4jet_e[6];
-/*
+		double ak4jet_pt_old[6],ak4jet_eta[6],ak4jet_phi[6],ak4jet_e_old[6];
+/*		double ak4jet_pt[6],ak4jet_e[6];
 		double ak4jet_pt_JEC_up[6],ak4jet_pt_JEC_down[6],ak4jet_e_JEC_up[6],ak4jet_e_JEC_down[6];
 		double ak4jet_pt_JER_up[6],ak4jet_pt_JER_down[6],ak4jet_e_JER_up[6],ak4jet_e_JER_down[6];
 */
@@ -531,15 +531,17 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("isTrue", &isTrue_, "isTrue/I");
 	outTree_->Branch("isprompt"    , &isprompt_, "isprompt/I");
 	//jets
-	outTree_->Branch("ak4jet_pt"        , ak4jet_pt       ,"ak4jet_pt[6]/D"       );
-/*	outTree_->Branch("ak4jet_pt_JEC_up"        , ak4jet_pt_JEC_up       ,"ak4jet_pt_JEC_up[6]/D"       );
+	outTree_->Branch("ak4jet_pt_old"        , ak4jet_pt_old       ,"ak4jet_pt_old[6]/D"       );
+/*	outTree_->Branch("ak4jet_pt"        , ak4jet_pt       ,"ak4jet_pt[6]/D"       );
+	outTree_->Branch("ak4jet_pt_JEC_up"        , ak4jet_pt_JEC_up       ,"ak4jet_pt_JEC_up[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JEC_down"        , ak4jet_pt_JEC_down       ,"ak4jet_pt_JEC_down[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JER_up"        , ak4jet_pt_JER_up       ,"ak4jet_pt_JER_up[6]/D"       );
 	outTree_->Branch("ak4jet_pt_JER_down"        , ak4jet_pt_JER_down       ,"ak4jet_pt_JER_down[6]/D"       );
 */	outTree_->Branch("ak4jet_eta"        , ak4jet_eta       ,"ak4jet_eta[6]/D"       );
 	outTree_->Branch("ak4jet_phi"        , ak4jet_phi       ,"ak4jet_phi[6]/D"       );
-	outTree_->Branch("ak4jet_e"        , ak4jet_e       ,"ak4jet_e[6]/D"       );
-/*	outTree_->Branch("ak4jet_e_JEC_up"        , ak4jet_e_JEC_up       ,"ak4jet_e_JEC_up[6]/D"       );
+	outTree_->Branch("ak4jet_e_old"        , ak4jet_e_old       ,"ak4jet_e_old[6]/D"       );
+/*	outTree_->Branch("ak4jet_e"        , ak4jet_e       ,"ak4jet_e[6]/D"       );
+	outTree_->Branch("ak4jet_e_JEC_up"        , ak4jet_e_JEC_up       ,"ak4jet_e_JEC_up[6]/D"       );
 	outTree_->Branch("ak4jet_e_JEC_down"        , ak4jet_e_JEC_down       ,"ak4jet_e_JEC_down[6]/D"       );
 	outTree_->Branch("ak4jet_e_JER_up"        , ak4jet_e_JER_up       ,"ak4jet_e_JER_up[6]/D"       );
 	outTree_->Branch("ak4jet_e_JER_down"        , ak4jet_e_JER_down       ,"ak4jet_e_JER_down[6]/D"       );
@@ -1508,10 +1510,10 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         ++nujets;
                 }
                 if(ik<6)  {
-                        ak4jet_pt[ik] =  corr*uncorrJet.pt();
+                        ak4jet_pt_old[ik] =  corr*uncorrJet.pt();
                         ak4jet_eta[ik] = (*ak4jets)[ik].eta();
                         ak4jet_phi[ik] = (*ak4jets)[ik].phi();
-                        ak4jet_e[ik] =   corr*uncorrJet.energy();
+                        ak4jet_e_old[ik] =   corr*uncorrJet.energy();
                         ak4jet_csv[ik] = (*ak4jets)[ik].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
                         ak4jet_icsv[ik] = (*ak4jets)[ik].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");   }
 }
@@ -1897,11 +1899,13 @@ void ZPKUTreeMaker::setDummyValues() {
 		photon_mla[i]=-1e1;
 		photon_mla2[i]=-1e1;
 		photon_mva[i]=-1e1;
-		ak4jet_pt[i]=-1e1;
+		ak4jet_pt_old[i]=-1e1;
 		ak4jet_eta[i]=-1e1;
 		ak4jet_phi[i]=-1e1;
+		ak4jet_e_old[i]=-1e1;
+/*		ak4jet_pt[i]=-1e1;
 		ak4jet_e[i]=-1e1;
-/*		ak4jet_pt_JEC_up[i]=-1e1;
+		ak4jet_pt_JEC_up[i]=-1e1;
 		ak4jet_pt_JEC_down[i]=-1e1;
 		ak4jet_e_JEC_up[i]=-1e1;
 		ak4jet_e_JEC_down[i]=-1e1;
