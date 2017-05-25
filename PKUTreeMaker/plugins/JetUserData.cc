@@ -125,19 +125,6 @@ JetUserData::JetUserData(const edm::ParameterSet& iConfig) :
 	jetCorrLabel_ = jecAK4chsLabels_;
 	offsetCorrLabel_.push_back(jetCorrLabel_[0]);
 
-	std::vector<JetCorrectorParameters> vPar;
-	for ( std::vector<std::string>::const_iterator payloadBegin = jecAK4chsLabels_.begin(), payloadEnd = jecAK4chsLabels_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-		JetCorrectorParameters pars(*ipayload);
-		vPar.push_back(pars);
-	}
-	jecAK4_ = new FactorizedJetCorrector(vPar);
-	vPar.clear();
-	for ( std::vector<std::string>::const_iterator payloadBegin = offsetCorrLabel_.begin(), payloadEnd = offsetCorrLabel_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-		JetCorrectorParameters pars(*ipayload);
-		vPar.push_back(pars);
-	}
-	jecOffset_ = new FactorizedJetCorrector(vPar);
-	vPar.clear();
 	//////// Meng 2017/5/8
 	produces<vector<pat::Jet> >();
 }
@@ -170,6 +157,19 @@ double JetUserData::get_JER_corr(float JERSF, bool isMC, pat::Jet jet, double co
 
 void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
+	std::vector<JetCorrectorParameters> vPar;
+        for ( std::vector<std::string>::const_iterator payloadBegin = jecAK4chsLabels_.begin(), payloadEnd = jecAK4chsLabels_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
+                JetCorrectorParameters pars(*ipayload);
+                vPar.push_back(pars);
+        }
+        jecAK4_ = new FactorizedJetCorrector(vPar);
+        vPar.clear();
+        for ( std::vector<std::string>::const_iterator payloadBegin = offsetCorrLabel_.begin(), payloadEnd = offsetCorrLabel_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
+                JetCorrectorParameters pars(*ipayload);
+                vPar.push_back(pars);
+        }
+        jecOffset_ = new FactorizedJetCorrector(vPar);
+        vPar.clear();
 	bool isMC = (!iEvent.isRealData());
 
 	double jetCorrEtaMax           = 9.9;
@@ -450,6 +450,12 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 	} //// Loop over all jets 
 
 	iEvent.put( jetColl );
+	delete jecAK4_;
+        jecAK4_=0;
+        delete jecOffset_;
+        jecOffset_=0;
+        delete skipMuonSelection_;
+        skipMuonSelection_=0;
 
 }
 
