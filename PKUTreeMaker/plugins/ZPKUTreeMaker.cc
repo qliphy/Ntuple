@@ -191,9 +191,9 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		// AK4 Jets
 		double ak4jet_pt_old[6],ak4jet_eta[6],ak4jet_phi[6],ak4jet_e_old[6];
 		double ak4jet_pt_new[6],ak4jet_e_new[6];
-		/*		double ak4jet_pt_JEC_up[6],ak4jet_pt_JEC_down[6],ak4jet_e_JEC_up[6],ak4jet_e_JEC_down[6];
-				double ak4jet_pt_JER_up[6],ak4jet_pt_JER_down[6],ak4jet_e_JER_up[6],ak4jet_e_JER_down[6];
-		 */
+		double ak4jet_pt_JEC_up[6],ak4jet_pt_JEC_down[6],ak4jet_e_JEC_up[6],ak4jet_e_JEC_down[6];
+		double ak4jet_pt_JER_up[6],ak4jet_pt_JER_down[6],ak4jet_e_JER_up[6],ak4jet_e_JER_down[6];
+
 		double ak4jet_pt_jer[6];
 		double ak4jet_csv[6],ak4jet_icsv[6];
 		double drjetlep[6], drjetphoton[6];
@@ -222,31 +222,37 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double dR_;
 		//Jets
 		double jet1pt, jet1eta, jet1phi, jet1e, jet1csv, jet1icsv;
-		/*		double jet1pt_JEC_up, jet1pt_JEC_down, jet1pt_JER_up, jet1pt_JER_down;
-				double jet1e_JEC_up, jet1e_JEC_down, jet1e_JER_up, jet1e_JER_down;
-		 */
+		double jet1pt_new, jet1e_new;
+		double jet1pt_JEC_up, jet1pt_JEC_down, jet1pt_JER_up, jet1pt_JER_down;
+		double jet1e_JEC_up, jet1e_JEC_down, jet1e_JER_up, jet1e_JER_down;
+
 		double jet1pt_f, jet1eta_f, jet1phi_f, jet1e_f, jet1csv_f, jet1icsv_f;
-		/*		double jet1pt_JEC_up_f, jet1pt_JEC_down_f, jet1pt_JER_up_f, jet1pt_JER_down_f;
-				double jet1e_JEC_up_f, jet1e_JEC_down_f, jet1e_JER_up_f, jet1e_JER_down_f;
-		 */
+		double jet1pt_f_new, jet1e_f_new;
+		double jet1pt_JEC_up_f, jet1pt_JEC_down_f, jet1pt_JER_up_f, jet1pt_JER_down_f;
+		double jet1e_JEC_up_f, jet1e_JEC_down_f, jet1e_JER_up_f, jet1e_JER_down_f;
+
 		double jet2pt, jet2eta, jet2phi, jet2e, jet2csv, jet2icsv;
-		/*		double jet2pt_JEC_up, jet2pt_JEC_down, jet2pt_JER_up, jet2pt_JER_down;
-				double jet2e_JEC_up, jet2e_JEC_down, jet2e_JER_up, jet2e_JER_down;
-		 */
+		double jet2pt_new, jet2e_new;
+		double jet2pt_JEC_up, jet2pt_JEC_down, jet2pt_JER_up, jet2pt_JER_down;
+		double jet2e_JEC_up, jet2e_JEC_down, jet2e_JER_up, jet2e_JER_down;
+
 		double jet2pt_f, jet2eta_f, jet2phi_f, jet2e_f, jet2csv_f, jet2icsv_f;
-		/*		double jet2pt_JEC_up_f, jet2pt_JEC_down_f, jet2pt_JER_up_f, jet2pt_JER_down_f;
-				double jet2e_JEC_up_f, jet2e_JEC_down_f, jet2e_JER_up_f, jet2e_JER_down_f;
-		 */
+		double jet2pt_f_new, jet2e_f_new;
+		double jet2pt_JEC_up_f, jet2pt_JEC_down_f, jet2pt_JER_up_f, jet2pt_JER_down_f;
+		double jet2e_JEC_up_f, jet2e_JEC_down_f, jet2e_JER_up_f, jet2e_JER_down_f;
+
 		double drj1a, drj2a, drj1l, drj2l, drj1l2,drj2l2;
 		double drj1a_f, drj2a_f, drj1l_f, drj2l_f, drj1l2_f, drj2l2_f;
 		double Mjj, deltaeta, zepp;
-		/*		double Mjj_JEC_up, Mjj_JEC_down, Mjj_JER_up, Mjj_JER_down;
-				double zepp_JEC_up, zepp_JEC_down, zepp_JER_up, zepp_JER_down;
-		 */
+		double Mjj_new, zepp_new;
+		double Mjj_JEC_up, Mjj_JEC_down, Mjj_JER_up, Mjj_JER_down;
+		double zepp_JEC_up, zepp_JEC_down, zepp_JER_up, zepp_JER_down;
+
 		double Mjj_f, deltaeta_f, zepp_f; 
-		/*		double Mjj_JEC_up_f, Mjj_JEC_down_f, Mjj_JER_up_f, Mjj_JER_down_f;
-				double zepp_JEC_up_f, zepp_JEC_down_f, zepp_JER_up_f, zepp_JER_down_f;
-		 */
+		double Mjj_f_new, zepp_f_new;
+		double Mjj_JEC_up_f, Mjj_JEC_down_f, Mjj_JER_up_f, Mjj_JER_down_f;
+		double zepp_JEC_up_f, zepp_JEC_down_f, zepp_JER_up_f, zepp_JER_down_f;
+
 
 		void setDummyValues();
 
@@ -533,75 +539,83 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	//jets
 	outTree_->Branch("ak4jet_pt_old"        , ak4jet_pt_old       ,"ak4jet_pt_old[6]/D"       );
 	outTree_->Branch("ak4jet_pt_new"        , ak4jet_pt_new       ,"ak4jet_pt_new[6]/D"       );
-	/*	outTree_->Branch("ak4jet_pt"        , ak4jet_pt       ,"ak4jet_pt[6]/D"       );
-		outTree_->Branch("ak4jet_pt_JEC_up"        , ak4jet_pt_JEC_up       ,"ak4jet_pt_JEC_up[6]/D"       );
-		outTree_->Branch("ak4jet_pt_JEC_down"        , ak4jet_pt_JEC_down       ,"ak4jet_pt_JEC_down[6]/D"       );
-		outTree_->Branch("ak4jet_pt_JER_up"        , ak4jet_pt_JER_up       ,"ak4jet_pt_JER_up[6]/D"       );
-		outTree_->Branch("ak4jet_pt_JER_down"        , ak4jet_pt_JER_down       ,"ak4jet_pt_JER_down[6]/D"       );
-	 */	outTree_->Branch("ak4jet_eta"        , ak4jet_eta       ,"ak4jet_eta[6]/D"       );
+	outTree_->Branch("ak4jet_pt"        , ak4jet_pt       ,"ak4jet_pt[6]/D"       );
+	outTree_->Branch("ak4jet_pt_JEC_up"        , ak4jet_pt_JEC_up       ,"ak4jet_pt_JEC_up[6]/D"       );
+	outTree_->Branch("ak4jet_pt_JEC_down"        , ak4jet_pt_JEC_down       ,"ak4jet_pt_JEC_down[6]/D"       );
+	outTree_->Branch("ak4jet_pt_JER_up"        , ak4jet_pt_JER_up       ,"ak4jet_pt_JER_up[6]/D"       );
+	outTree_->Branch("ak4jet_pt_JER_down"        , ak4jet_pt_JER_down       ,"ak4jet_pt_JER_down[6]/D"       );
+	outTree_->Branch("ak4jet_eta"        , ak4jet_eta       ,"ak4jet_eta[6]/D"       );
 	outTree_->Branch("ak4jet_phi"        , ak4jet_phi       ,"ak4jet_phi[6]/D"       );
 	outTree_->Branch("ak4jet_e_old"        , ak4jet_e_old       ,"ak4jet_e_old[6]/D"       );
 	outTree_->Branch("ak4jet_e_new"        , ak4jet_e_new       ,"ak4jet_e_new[6]/D"       );
-	/*	outTree_->Branch("ak4jet_e"        , ak4jet_e       ,"ak4jet_e[6]/D"       );
-		outTree_->Branch("ak4jet_e_JEC_up"        , ak4jet_e_JEC_up       ,"ak4jet_e_JEC_up[6]/D"       );
-		outTree_->Branch("ak4jet_e_JEC_down"        , ak4jet_e_JEC_down       ,"ak4jet_e_JEC_down[6]/D"       );
-		outTree_->Branch("ak4jet_e_JER_up"        , ak4jet_e_JER_up       ,"ak4jet_e_JER_up[6]/D"       );
-		outTree_->Branch("ak4jet_e_JER_down"        , ak4jet_e_JER_down       ,"ak4jet_e_JER_down[6]/D"       );
-	 */	outTree_->Branch("ak4jet_csv"        , ak4jet_csv       ,"ak4jet_csv[6]/D"       );
+	outTree_->Branch("ak4jet_e"        , ak4jet_e       ,"ak4jet_e[6]/D"       );
+	outTree_->Branch("ak4jet_e_JEC_up"        , ak4jet_e_JEC_up       ,"ak4jet_e_JEC_up[6]/D"       );
+	outTree_->Branch("ak4jet_e_JEC_down"        , ak4jet_e_JEC_down       ,"ak4jet_e_JEC_down[6]/D"       );
+	outTree_->Branch("ak4jet_e_JER_up"        , ak4jet_e_JER_up       ,"ak4jet_e_JER_up[6]/D"       );
+	outTree_->Branch("ak4jet_e_JER_down"        , ak4jet_e_JER_down       ,"ak4jet_e_JER_down[6]/D"       );
+	outTree_->Branch("ak4jet_csv"        , ak4jet_csv       ,"ak4jet_csv[6]/D"       );
 	outTree_->Branch("ak4jet_icsv"        , ak4jet_icsv       ,"ak4jet_icsv[6]/D"       );
 	outTree_->Branch("jet1pt"          ,&jet1pt         ,"jet1pt/D"         );
-	/*	outTree_->Branch("jet1pt_JEC_up"          ,&jet1pt_JEC_up         ,"jet1pt_JEC_up/D"         );
-		outTree_->Branch("jet1pt_JER_up"          ,&jet1pt_JER_up         ,"jet1pt_JER_up/D"         );
-		outTree_->Branch("jet1pt_JEC_down"          ,&jet1pt_JEC_down         ,"jet1pt_JEC_down/D"         );
-		outTree_->Branch("jet1pt_JER_down"          ,&jet1pt_JER_down         ,"jet1pt_JER_down/D"         );
-	 */	outTree_->Branch("jet1pt_f"          ,&jet1pt_f         ,"jet1pt_f/D"         );
-	/*	outTree_->Branch("jet1pt_JEC_up_f"          ,&jet1pt_JEC_up_f         ,"jet1pt_JEC_up_f/D"         );
-		outTree_->Branch("jet1pt_JER_up_f"          ,&jet1pt_JER_up_f         ,"jet1pt_JER_up_f/D"         );
-		outTree_->Branch("jet1pt_JEC_down_f"          ,&jet1pt_JEC_down_f         ,"jet1pt_JEC_down_f/D"         );
-		outTree_->Branch("jet1pt_JER_down_f"          ,&jet1pt_JER_down_f         ,"jet1pt_JER_down_f/D"         );
-	 */	outTree_->Branch("jet1eta"          ,&jet1eta         ,"jet1eta/D"         );
+	outTree_->Branch("jet1pt_new"          ,&jet1pt_new         ,"jet1pt_new/D"         );
+	outTree_->Branch("jet1pt_JEC_up"          ,&jet1pt_JEC_up         ,"jet1pt_JEC_up/D"         );
+	outTree_->Branch("jet1pt_JER_up"          ,&jet1pt_JER_up         ,"jet1pt_JER_up/D"         );
+	outTree_->Branch("jet1pt_JEC_down"          ,&jet1pt_JEC_down         ,"jet1pt_JEC_down/D"         );
+	outTree_->Branch("jet1pt_JER_down"          ,&jet1pt_JER_down         ,"jet1pt_JER_down/D"         );
+	outTree_->Branch("jet1pt_f"          ,&jet1pt_f         ,"jet1pt_f/D"         );
+	outTree_->Branch("jet1pt_f_new"          ,&jet1pt_f_new         ,"jet1pt_f_new/D"         );
+	outTree_->Branch("jet1pt_JEC_up_f"          ,&jet1pt_JEC_up_f         ,"jet1pt_JEC_up_f/D"         );
+	outTree_->Branch("jet1pt_JER_up_f"          ,&jet1pt_JER_up_f         ,"jet1pt_JER_up_f/D"         );
+	outTree_->Branch("jet1pt_JEC_down_f"          ,&jet1pt_JEC_down_f         ,"jet1pt_JEC_down_f/D"         );
+	outTree_->Branch("jet1pt_JER_down_f"          ,&jet1pt_JER_down_f         ,"jet1pt_JER_down_f/D"         );
+	outTree_->Branch("jet1eta"          ,&jet1eta         ,"jet1eta/D"         );
 	outTree_->Branch("jet1eta_f"          ,&jet1eta_f         ,"jet1eta_f/D"         );
 	outTree_->Branch("jet1phi"          ,&jet1phi         ,"jet1phi/D"         );
 	outTree_->Branch("jet1phi_f"          ,&jet1phi_f         ,"jet1phi_f/D"         );
 	outTree_->Branch("jet1e"          ,&jet1e         ,"jet1e/D"         );
-	/*	outTree_->Branch("jet1e_JEC_up"          ,&jet1e_JEC_up         ,"jet1e_JEC_up/D"         );
-		outTree_->Branch("jet1e_JER_up"          ,&jet1e_JER_up         ,"jet1e_JER_up/D"         );
-		outTree_->Branch("jet1e_JEC_down"          ,&jet1e_JEC_down         ,"jet1e_JEC_down/D"         );
-		outTree_->Branch("jet1e_JER_down"          ,&jet1e_JER_down         ,"jet1e_JER_down/D"         );
-	 */	outTree_->Branch("jet1e_f"          ,&jet1e_f         ,"jet1e_f/D"         );
-	/*	outTree_->Branch("jet1e_JEC_up_f"          ,&jet1e_JEC_up_f         ,"jet1e_JEC_up_f/D"         );
-		outTree_->Branch("jet1e_JER_up_f"          ,&jet1e_JER_up_f         ,"jet1e_JER_up_f/D"         );
-		outTree_->Branch("jet1e_JEC_down_f"          ,&jet1e_JEC_down_f         ,"jet1e_JEC_down_f/D"         );
-		outTree_->Branch("jet1e_JER_down_f"          ,&jet1e_JER_down_f         ,"jet1e_JER_down_f/D"         );
-	 */	outTree_->Branch("jet1csv"          ,&jet1csv         ,"jet1csv/D"         );
+	outTree_->Branch("jet1e_new"          ,&jet1e_new         ,"jet1e_new/D"         );
+	outTree_->Branch("jet1e_JEC_up"          ,&jet1e_JEC_up         ,"jet1e_JEC_up/D"         );
+	outTree_->Branch("jet1e_JER_up"          ,&jet1e_JER_up         ,"jet1e_JER_up/D"         );
+	outTree_->Branch("jet1e_JEC_down"          ,&jet1e_JEC_down         ,"jet1e_JEC_down/D"         );
+	outTree_->Branch("jet1e_JER_down"          ,&jet1e_JER_down         ,"jet1e_JER_down/D"         );
+	outTree_->Branch("jet1e_f"          ,&jet1e_f         ,"jet1e_f/D"         );
+	outTree_->Branch("jet1e_f_new"          ,&jet1e_f_new         ,"jet1e_f_new/D"         );
+	outTree_->Branch("jet1e_JEC_up_f"          ,&jet1e_JEC_up_f         ,"jet1e_JEC_up_f/D"         );
+	outTree_->Branch("jet1e_JER_up_f"          ,&jet1e_JER_up_f         ,"jet1e_JER_up_f/D"         );
+	outTree_->Branch("jet1e_JEC_down_f"          ,&jet1e_JEC_down_f         ,"jet1e_JEC_down_f/D"         );
+	outTree_->Branch("jet1e_JER_down_f"          ,&jet1e_JER_down_f         ,"jet1e_JER_down_f/D"         );
+	outTree_->Branch("jet1csv"          ,&jet1csv         ,"jet1csv/D"         );
 	outTree_->Branch("jet1csv_f"          ,&jet1csv_f         ,"jet1csv_f/D"         );   
 	outTree_->Branch("jet1icsv"          ,&jet1icsv         ,"jet1icsv/D"         );
 	outTree_->Branch("jet1icsv_f"          ,&jet1icsv_f         ,"jet1icsv_f/D"         ); 
 	outTree_->Branch("jet2pt"          ,&jet2pt         ,"jet2pt/D"         );
-	/*	outTree_->Branch("jet2pt_JEC_up"          ,&jet2pt_JEC_up         ,"jet2pt_JEC_up/D"         );
-		outTree_->Branch("jet2pt_JER_up"          ,&jet2pt_JER_up         ,"jet2pt_JER_up/D"         );
-		outTree_->Branch("jet2pt_JEC_down"          ,&jet2pt_JEC_down         ,"jet2pt_JEC_down/D"         );
-		outTree_->Branch("jet2pt_JER_down"          ,&jet2pt_JER_down         ,"jet2pt_JER_down/D"         );
-	 */	outTree_->Branch("jet2pt_f"          ,&jet2pt_f         ,"jet2pt_f/D"         );
-	/*	outTree_->Branch("jet2pt_JEC_up_f"          ,&jet2pt_JEC_up_f         ,"jet2pt_JEC_up_f/D"         );
-		outTree_->Branch("jet2pt_JER_up_f"          ,&jet2pt_JER_up_f         ,"jet2pt_JER_up_f/D"         );
-		outTree_->Branch("jet2pt_JEC_down_f"          ,&jet2pt_JEC_down_f         ,"jet2pt_JEC_down_f/D"         ); 
-		outTree_->Branch("jet2pt_JER_down_f"          ,&jet2pt_JER_down_f         ,"jet2pt_JER_down_f/D"         );
-	 */	outTree_->Branch("jet2eta"          ,&jet2eta         ,"jet2eta/D"         );
+	outTree_->Branch("jet2pt_new"          ,&jet2pt_new         ,"jet2pt_new/D"         );
+	outTree_->Branch("jet2pt_JEC_up"          ,&jet2pt_JEC_up         ,"jet2pt_JEC_up/D"         );
+	outTree_->Branch("jet2pt_JER_up"          ,&jet2pt_JER_up         ,"jet2pt_JER_up/D"         );
+	outTree_->Branch("jet2pt_JEC_down"          ,&jet2pt_JEC_down         ,"jet2pt_JEC_down/D"         );
+	outTree_->Branch("jet2pt_JER_down"          ,&jet2pt_JER_down         ,"jet2pt_JER_down/D"         );
+	outTree_->Branch("jet2pt_f"          ,&jet2pt_f         ,"jet2pt_f/D"         );
+	outTree_->Branch("jet2pt_f_new"          ,&jet2pt_f_new         ,"jet2pt_f_new/D"         );
+	outTree_->Branch("jet2pt_JEC_up_f"          ,&jet2pt_JEC_up_f         ,"jet2pt_JEC_up_f/D"         );
+	outTree_->Branch("jet2pt_JER_up_f"          ,&jet2pt_JER_up_f         ,"jet2pt_JER_up_f/D"         );
+	outTree_->Branch("jet2pt_JEC_down_f"          ,&jet2pt_JEC_down_f         ,"jet2pt_JEC_down_f/D"         ); 
+	outTree_->Branch("jet2pt_JER_down_f"          ,&jet2pt_JER_down_f         ,"jet2pt_JER_down_f/D"         );
+	outTree_->Branch("jet2eta"          ,&jet2eta         ,"jet2eta/D"         );
 	outTree_->Branch("jet2eta_f"          ,&jet2eta_f         ,"jet2eta_f/D"         );
 	outTree_->Branch("jet2phi"          ,&jet2phi         ,"jet2phi/D"         );
 	outTree_->Branch("jet2phi_f"          ,&jet2phi_f         ,"jet2phi_f/D"         );
 	outTree_->Branch("jet2e"          ,&jet2e         ,"jet2e/D"         );
-	/*	outTree_->Branch("jet2e_JEC_up"          ,&jet2e_JEC_up         ,"jet2e_JEC_up/D"         );
-		outTree_->Branch("jet2e_JER_up"          ,&jet2e_JER_up         ,"jet2e_JER_up/D"         );
-		outTree_->Branch("jet2e_JEC_down"          ,&jet2e_JEC_down         ,"jet2e_JEC_down/D"         );
-		outTree_->Branch("jet2e_JER_down"          ,&jet2e_JER_down         ,"jet2e_JER_down/D"         );
-	 */	outTree_->Branch("jet2e_f"          ,&jet2e_f         ,"jet2e_f/D"         );
-	/*	outTree_->Branch("jet2e_JEC_up_f"          ,&jet2e_JEC_up_f         ,"jet2e_JEC_up_f/D"         );
-		outTree_->Branch("jet2e_JER_up_f"          ,&jet2e_JER_up_f         ,"jet2e_JER_up_f/D"         );
-		outTree_->Branch("jet2e_JEC_down_f"          ,&jet2e_JEC_down_f         ,"jet2e_JEC_down_f/D"         );
-		outTree_->Branch("jet2e_JER_down_f"          ,&jet2e_JER_down_f         ,"jet2e_JER_down_f/D"         );
-	 */	outTree_->Branch("jet2csv"          ,&jet2csv         ,"jet2csv/D"         );
+	outTree_->Branch("jet2e_new"          ,&jet2e_new         ,"jet2e_new/D"         );
+	outTree_->Branch("jet2e_JEC_up"          ,&jet2e_JEC_up         ,"jet2e_JEC_up/D"         );
+	outTree_->Branch("jet2e_JER_up"          ,&jet2e_JER_up         ,"jet2e_JER_up/D"         );
+	outTree_->Branch("jet2e_JEC_down"          ,&jet2e_JEC_down         ,"jet2e_JEC_down/D"         );
+	outTree_->Branch("jet2e_JER_down"          ,&jet2e_JER_down         ,"jet2e_JER_down/D"         );
+	outTree_->Branch("jet2e_f"          ,&jet2e_f         ,"jet2e_f/D"         );
+	outTree_->Branch("jet2e_f_new"          ,&jet2e_f_new         ,"jet2e_f_new/D"         );
+	outTree_->Branch("jet2e_JEC_up_f"          ,&jet2e_JEC_up_f         ,"jet2e_JEC_up_f/D"         );
+	outTree_->Branch("jet2e_JER_up_f"          ,&jet2e_JER_up_f         ,"jet2e_JER_up_f/D"         );
+	outTree_->Branch("jet2e_JEC_down_f"          ,&jet2e_JEC_down_f         ,"jet2e_JEC_down_f/D"         );
+	outTree_->Branch("jet2e_JER_down_f"          ,&jet2e_JER_down_f         ,"jet2e_JER_down_f/D"         );
+	outTree_->Branch("jet2csv"          ,&jet2csv         ,"jet2csv/D"         );
 	outTree_->Branch("jet2csv_f"          ,&jet2csv_f         ,"jet2csv_f/D"         );
 	outTree_->Branch("jet2icsv"          ,&jet2icsv         ,"jet2icsv/D"         );
 	outTree_->Branch("jet2icsv_f"          ,&jet2icsv_f         ,"jet2icsv_f/D"         );
@@ -618,28 +632,32 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("drj2l2"          ,&drj2l2         ,"drj2l2/D"         );
 	outTree_->Branch("drj2l2_f"          ,&drj2l2_f         ,"drj2l2_f/D"         );
 	outTree_->Branch("Mjj"          ,&Mjj         ,"Mjj/D"         );
-	/*	outTree_->Branch("Mjj_JEC_up"          ,&Mjj_JEC_up         ,"Mjj_JEC_up/D"         );
-		outTree_->Branch("Mjj_JEC_down"          ,&Mjj_JEC_down         ,"Mjj_JEC_down/D"         );
-		outTree_->Branch("Mjj_JER_up"          ,&Mjj_JER_up         ,"Mjj_JER_up/D"         );
-		outTree_->Branch("Mjj_JER_down"          ,&Mjj_JER_down         ,"Mjj_JER_down/D"         );
-	 */	outTree_->Branch("Mjj_f"          ,&Mjj_f         ,"Mjj_f/D"         );
-	/*	outTree_->Branch("Mjj_JEC_up_f"          ,&Mjj_JEC_up_f         ,"Mjj_JEC_up_f/D"         );
-		outTree_->Branch("Mjj_JEC_down_f"          ,&Mjj_JEC_down_f         ,"Mjj_JEC_down_f/D"         );
-		outTree_->Branch("Mjj_JER_up_f"          ,&Mjj_JER_up_f         ,"Mjj_JER_up_f/D"         );
-		outTree_->Branch("Mjj_JER_down_f"          ,&Mjj_JER_down_f         ,"Mjj_JER_down_f/D"         );
-	 */	outTree_->Branch("deltaeta"          ,&deltaeta         ,"deltaeta/D"         );
+	outTree_->Branch("Mjj_new"          ,&Mjj_new         ,"Mjj_new/D"         );
+	outTree_->Branch("Mjj_JEC_up"          ,&Mjj_JEC_up         ,"Mjj_JEC_up/D"         );
+	outTree_->Branch("Mjj_JEC_down"          ,&Mjj_JEC_down         ,"Mjj_JEC_down/D"         );
+	outTree_->Branch("Mjj_JER_up"          ,&Mjj_JER_up         ,"Mjj_JER_up/D"         );
+	outTree_->Branch("Mjj_JER_down"          ,&Mjj_JER_down         ,"Mjj_JER_down/D"         );
+	outTree_->Branch("Mjj_f"          ,&Mjj_f         ,"Mjj_f/D"         );
+	outTree_->Branch("Mjj_f_new"          ,&Mjj_f_new         ,"Mjj_f_new/D"         );
+	outTree_->Branch("Mjj_JEC_up_f"          ,&Mjj_JEC_up_f         ,"Mjj_JEC_up_f/D"         );
+	outTree_->Branch("Mjj_JEC_down_f"          ,&Mjj_JEC_down_f         ,"Mjj_JEC_down_f/D"         );
+	outTree_->Branch("Mjj_JER_up_f"          ,&Mjj_JER_up_f         ,"Mjj_JER_up_f/D"         );
+	outTree_->Branch("Mjj_JER_down_f"          ,&Mjj_JER_down_f         ,"Mjj_JER_down_f/D"         );
+	outTree_->Branch("deltaeta"          ,&deltaeta         ,"deltaeta/D"         );
 	outTree_->Branch("deltaeta_f"          ,&deltaeta_f         ,"deltaeta_f/D"         );
 	outTree_->Branch("zepp"          ,&zepp         ,"zepp/D"         );
-	/*	outTree_->Branch("zepp_JEC_up"          ,&zepp_JEC_up         ,"zepp_JEC_up/D"         );
-		outTree_->Branch("zepp_JEC_down"          ,&zepp_JEC_down         ,"zepp_JEC_down/D"         );
-		outTree_->Branch("zepp_JER_up"          ,&zepp_JER_up         ,"zepp_JER_up/D"         );
-		outTree_->Branch("zepp_JER_down"          ,&zepp_JER_down         ,"zepp_JER_down/D"         );
-	 */	outTree_->Branch("zepp_f"          ,&zepp_f         ,"zepp_f/D"         );
-	/*	outTree_->Branch("zepp_JEC_up_f"          ,&zepp_JEC_up_f         ,"zepp_JEC_up_f/D"         );
-		outTree_->Branch("zepp_JEC_down_f"          ,&zepp_JEC_down_f         ,"zepp_JEC_down_f/D"         );
-		outTree_->Branch("zepp_JER_up_f"          ,&zepp_JER_up_f         ,"zepp_JER_up_f/D"         );
-		outTree_->Branch("zepp_JER_down_f"          ,&zepp_JER_down_f         ,"zepp_JER_down_f/D"         );
-	 */	// Generic kinematic quantities
+	outTree_->Branch("zepp_new"          ,&zepp_new         ,"zepp_new/D"         );
+	outTree_->Branch("zepp_JEC_up"          ,&zepp_JEC_up         ,"zepp_JEC_up/D"         );
+	outTree_->Branch("zepp_JEC_down"          ,&zepp_JEC_down         ,"zepp_JEC_down/D"         );
+	outTree_->Branch("zepp_JER_up"          ,&zepp_JER_up         ,"zepp_JER_up/D"         );
+	outTree_->Branch("zepp_JER_down"          ,&zepp_JER_down         ,"zepp_JER_down/D"         );
+	outTree_->Branch("zepp_f"          ,&zepp_f         ,"zepp_f/D"         );
+	outTree_->Branch("zepp_f_new"          ,&zepp_f_new         ,"zepp_f_new/D"         );
+	outTree_->Branch("zepp_JEC_up_f"          ,&zepp_JEC_up_f         ,"zepp_JEC_up_f/D"         );
+	outTree_->Branch("zepp_JEC_down_f"          ,&zepp_JEC_down_f         ,"zepp_JEC_down_f/D"         );
+	outTree_->Branch("zepp_JER_up_f"          ,&zepp_JER_up_f         ,"zepp_JER_up_f/D"         );
+	outTree_->Branch("zepp_JER_down_f"          ,&zepp_JER_down_f         ,"zepp_JER_down_f/D"         );
+	// Generic kinematic quantities
 	outTree_->Branch("ptlep1"          ,&ptlep1         ,"ptlep1/D"         );
 	outTree_->Branch("etalep1"         ,&etalep1        ,"etalep1/D"        );
 	outTree_->Branch("philep1"         ,&philep1        ,"philep1/D"        );
@@ -1538,7 +1556,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	//////----------------------------------------------
 	//------------- jet pt energy JEC up uncertaity
 	//////----------------------------------------------
-/*	std::vector<TLorentzVector*> jets_JEC_up;
+	std::vector<TLorentzVector*> jets_JEC_up;
 	for (size_t ik=0; ik<ak4jets->size();ik++)
 	{
 		reco::Candidate::LorentzVector uncorrJet = (*ak4jets)[ik].correctedP4(0);
@@ -1611,13 +1629,14 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			ak4jet_e_JER_down[ik] =   (*ak4jets)[ik].userFloat("SmearedE_JER_down");
 		}
 	}
-	*/
-		sort (jets.begin (), jets.end (), ZmysortPt);
-	/*	sort (jets_JEC_up.begin (), jets_JEC_up.end (), ZmysortPt);
-		sort (jets_JEC_down.begin (), jets_JEC_down.end (), ZmysortPt);
-		sort (jets_JER_up.begin (), jets_JER_up.end (), ZmysortPt);
-		sort (jets_JER_down.begin (), jets_JER_down.end (), ZmysortPt);
-	 */
+
+	sort (jets.begin (), jets.end (), ZmysortPt);
+	sort (jets_new.begin (), jets_new.end (), ZmysortPt);
+	sort (jets_JEC_up.begin (), jets_JEC_up.end (), ZmysortPt);
+	sort (jets_JEC_down.begin (), jets_JEC_down.end (), ZmysortPt);
+	sort (jets_JER_up.begin (), jets_JER_up.end (), ZmysortPt);
+	sort (jets_JER_down.begin (), jets_JER_down.end (), ZmysortPt);
+
 	for (size_t i=0;i<jets.size();i++) {
 		if(iphoton>-1) {
 			double drtmp1=deltaR(jets.at(i)->Eta(), jets.at(i)->Phi(), photoneta,photonphi);
@@ -1648,30 +1667,34 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	if(jetindexphoton12[0]>-1 && jetindexphoton12[1]>-1) {
 		jet1pt=jets[jetindexphoton12[0]]->Pt();
-		/*	jet1pt_JEC_up=jets_JEC_up[jetindexphoton12[0]]->Pt();
-			jet1pt_JEC_down=jets_JEC_down[jetindexphoton12[0]]->Pt();
-			jet1pt_JER_up=jets_JER_up[jetindexphoton12[0]]->Pt();
-			jet1pt_JER_down=jets_JER_down[jetindexphoton12[0]]->Pt();
-		 */	jet1eta=jets[jetindexphoton12[0]]->Eta();
+		jet1pt_new=jets_new[jetindexphoton12[0]]->Pt();
+		jet1pt_JEC_up=jets_JEC_up[jetindexphoton12[0]]->Pt();
+		jet1pt_JEC_down=jets_JEC_down[jetindexphoton12[0]]->Pt();
+		jet1pt_JER_up=jets_JER_up[jetindexphoton12[0]]->Pt();
+		jet1pt_JER_down=jets_JER_down[jetindexphoton12[0]]->Pt();
+		jet1eta=jets[jetindexphoton12[0]]->Eta();
 		jet1phi=jets[jetindexphoton12[0]]->Phi();
 		jet1e=jets[jetindexphoton12[0]]->E();
-		/*	jet1e_JEC_up=jets_JEC_up[jetindexphoton12[0]]->E();
-			jet1e_JEC_down=jets_JEC_down[jetindexphoton12[0]]->E();
-			jet1e_JER_up=jets_JER_up[jetindexphoton12[0]]->E();
-			jet1e_JER_down=jets_JER_down[jetindexphoton12[0]]->E();
-		 */	jet2pt=jets[jetindexphoton12[1]]->Pt();
-		/*	jet2pt_JEC_up=jets_JEC_up[jetindexphoton12[1]]->Pt();
-			jet2pt_JEC_down=jets_JEC_down[jetindexphoton12[1]]->Pt();
-			jet2pt_JER_up=jets_JER_up[jetindexphoton12[1]]->Pt();
-			jet2pt_JER_down=jets_JER_down[jetindexphoton12[1]]->Pt();
-		 */	jet2eta=jets[jetindexphoton12[1]]->Eta();
+		jet1e_new=jets_new[jetindexphoton12[0]]->E();
+		jet1e_JEC_up=jets_JEC_up[jetindexphoton12[0]]->E();
+		jet1e_JEC_down=jets_JEC_down[jetindexphoton12[0]]->E();
+		jet1e_JER_up=jets_JER_up[jetindexphoton12[0]]->E();
+		jet1e_JER_down=jets_JER_down[jetindexphoton12[0]]->E();
+		jet2pt=jets[jetindexphoton12[1]]->Pt();
+		jet2pt_new=jets_new[jetindexphoton12[1]]->Pt();
+		jet2pt_JEC_up=jets_JEC_up[jetindexphoton12[1]]->Pt();
+		jet2pt_JEC_down=jets_JEC_down[jetindexphoton12[1]]->Pt();
+		jet2pt_JER_up=jets_JER_up[jetindexphoton12[1]]->Pt();
+		jet2pt_JER_down=jets_JER_down[jetindexphoton12[1]]->Pt();
+		jet2eta=jets[jetindexphoton12[1]]->Eta();
 		jet2phi=jets[jetindexphoton12[1]]->Phi();
 		jet2e=jets[jetindexphoton12[1]]->E();
-		/*	jet2e_JEC_up=jets_JEC_up[jetindexphoton12[1]]->E();
-			jet2e_JEC_down=jets_JEC_down[jetindexphoton12[1]]->E();
-			jet2e_JER_up=jets_JER_up[jetindexphoton12[1]]->E();
-			jet2e_JER_down=jets_JER_down[jetindexphoton12[1]]->E();
-		 */	jet1csv =(*ak4jets)[jetindexphoton12[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
+		jet2e_new=jets_new[jetindexphoton12[1]]->E();
+		jet2e_JEC_up=jets_JEC_up[jetindexphoton12[1]]->E();
+		jet2e_JEC_down=jets_JEC_down[jetindexphoton12[1]]->E();
+		jet2e_JER_up=jets_JER_up[jetindexphoton12[1]]->E();
+		jet2e_JER_down=jets_JER_down[jetindexphoton12[1]]->E();
+		jet1csv =(*ak4jets)[jetindexphoton12[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
 		jet2csv =(*ak4jets)[jetindexphoton12[1]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
 		jet1icsv =(*ak4jets)[jetindexphoton12[0]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
 		jet2icsv =(*ak4jets)[jetindexphoton12[1]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
@@ -1695,52 +1718,61 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		if(j2metPhi>Pi) {j2metPhi=2.0*Pi-j2metPhi;}
 		Mjj=(j1p4 + j2p4).M();
 		zepp = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
-		/*	j1p4.SetPtEtaPhiE(jet1pt_JEC_up, jet1eta, jet1phi, jet1e_JEC_up);
-			j2p4.SetPtEtaPhiE(jet2pt_JEC_up, jet2eta, jet2phi, jet2e_JEC_up);
-			Mjj_JEC_up=(j1p4 + j2p4).M();
-			zepp_JEC_up = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
-			j1p4.SetPtEtaPhiE(jet1pt_JEC_down, jet1eta, jet1phi, jet1e_JEC_down);
-			j2p4.SetPtEtaPhiE(jet2pt_JEC_down, jet2eta, jet2phi, jet2e_JEC_down);
-			Mjj_JEC_down=(j1p4 + j2p4).M();
-			zepp_JEC_down = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
-			j1p4.SetPtEtaPhiE(jet1pt_JER_up, jet1eta, jet1phi, jet1e_JER_up);
-			j2p4.SetPtEtaPhiE(jet2pt_JER_up, jet2eta, jet2phi, jet2e_JER_up);
-			Mjj_JER_up=(j1p4 + j2p4).M();
-			zepp_JER_up = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
-			j1p4.SetPtEtaPhiE(jet1pt_JER_down, jet1eta, jet1phi, jet1e_JER_down);
-			j2p4.SetPtEtaPhiE(jet2pt_JER_down, jet2eta, jet2phi, jet2e_JER_down);
-			Mjj_JER_down=(j1p4 + j2p4).M();
-			zepp_JER_down = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
-			deltaeta = fabs(jet1eta - jet2eta);*/
+
+		j1p4.SetPtEtaPhiE(jet1pt_new, jet1eta, jet1phi, jet1e_new);
+		j2p4.SetPtEtaPhiE(jet2pt_new, jet2eta, jet2phi, jet2e_new);
+		Mjj_new=(j1p4 + j2p4).M();
+		zepp_new = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
+		j1p4.SetPtEtaPhiE(jet1pt_JEC_up, jet1eta, jet1phi, jet1e_JEC_up);
+		j2p4.SetPtEtaPhiE(jet2pt_JEC_up, jet2eta, jet2phi, jet2e_JEC_up);
+		Mjj_JEC_up=(j1p4 + j2p4).M();
+		zepp_JEC_up = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
+		j1p4.SetPtEtaPhiE(jet1pt_JEC_down, jet1eta, jet1phi, jet1e_JEC_down);
+		j2p4.SetPtEtaPhiE(jet2pt_JEC_down, jet2eta, jet2phi, jet2e_JEC_down);
+		Mjj_JEC_down=(j1p4 + j2p4).M();
+		zepp_JEC_down = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
+		j1p4.SetPtEtaPhiE(jet1pt_JER_up, jet1eta, jet1phi, jet1e_JER_up);
+		j2p4.SetPtEtaPhiE(jet2pt_JER_up, jet2eta, jet2phi, jet2e_JER_up);
+		Mjj_JER_up=(j1p4 + j2p4).M();
+		zepp_JER_up = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
+		j1p4.SetPtEtaPhiE(jet1pt_JER_down, jet1eta, jet1phi, jet1e_JER_down);
+		j2p4.SetPtEtaPhiE(jet2pt_JER_down, jet2eta, jet2phi, jet2e_JER_down);
+		Mjj_JER_down=(j1p4 + j2p4).M();
+		zepp_JER_down = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
+		deltaeta = fabs(jet1eta - jet2eta);
 	}
 
 
 	if(jetindexphoton12_f[0]>-1 && jetindexphoton12_f[1]>-1) {
 		jet1pt_f=jets[jetindexphoton12_f[0]]->Pt();
-		/*		jet1pt_JEC_up_f=jets_JEC_up[jetindexphoton12_f[0]]->Pt();
-				jet1pt_JEC_down_f=jets_JEC_down[jetindexphoton12_f[0]]->Pt();
-				jet1pt_JER_up_f=jets_JER_up[jetindexphoton12_f[0]]->Pt();
-				jet1pt_JER_down_f=jets_JER_down[jetindexphoton12_f[0]]->Pt();
-		 */		jet1eta_f=jets[jetindexphoton12_f[0]]->Eta();
+		jet1pt_f_new=jets_new[jetindexphoton12_f[0]]->Pt();
+		jet1pt_JEC_up_f=jets_JEC_up[jetindexphoton12_f[0]]->Pt();
+		jet1pt_JEC_down_f=jets_JEC_down[jetindexphoton12_f[0]]->Pt();
+		jet1pt_JER_up_f=jets_JER_up[jetindexphoton12_f[0]]->Pt();
+		jet1pt_JER_down_f=jets_JER_down[jetindexphoton12_f[0]]->Pt();
+		jet1eta_f=jets[jetindexphoton12_f[0]]->Eta();
 		jet1phi_f=jets[jetindexphoton12_f[0]]->Phi();
 		jet1e_f=jets[jetindexphoton12_f[0]]->E();
-		/*		jet1e_JEC_up_f=jets_JEC_up[jetindexphoton12_f[0]]->E();
-				jet1e_JEC_down_f=jets_JEC_down[jetindexphoton12_f[0]]->E();
-				jet1e_JER_up_f=jets_JER_up[jetindexphoton12_f[0]]->E();
-				jet1e_JER_down_f=jets_JER_down[jetindexphoton12_f[0]]->E();
-		 */		jet2pt_f=jets[jetindexphoton12_f[1]]->Pt();
-		/*		jet2pt_JEC_up_f=jets_JEC_up[jetindexphoton12_f[1]]->Pt();
-				jet2pt_JEC_down_f=jets_JEC_down[jetindexphoton12_f[1]]->Pt();
-				jet2pt_JER_up_f=jets_JER_up[jetindexphoton12_f[1]]->Pt();
-				jet2pt_JER_down_f=jets_JER_down[jetindexphoton12_f[1]]->Pt();
-		 */		jet2eta_f=jets[jetindexphoton12_f[1]]->Eta();
+		jet1e_f_new=jets_new[jetindexphoton12_f[0]]->E();
+		jet1e_JEC_up_f=jets_JEC_up[jetindexphoton12_f[0]]->E();
+		jet1e_JEC_down_f=jets_JEC_down[jetindexphoton12_f[0]]->E();
+		jet1e_JER_up_f=jets_JER_up[jetindexphoton12_f[0]]->E();
+		jet1e_JER_down_f=jets_JER_down[jetindexphoton12_f[0]]->E();
+		jet2pt_f=jets[jetindexphoton12_f[1]]->Pt();
+		jet2pt_f_new=jets_new[jetindexphoton12_f[1]]->Pt();
+		jet2pt_JEC_up_f=jets_JEC_up[jetindexphoton12_f[1]]->Pt();
+		jet2pt_JEC_down_f=jets_JEC_down[jetindexphoton12_f[1]]->Pt();
+		jet2pt_JER_up_f=jets_JER_up[jetindexphoton12_f[1]]->Pt();
+		jet2pt_JER_down_f=jets_JER_down[jetindexphoton12_f[1]]->Pt();
+		jet2eta_f=jets[jetindexphoton12_f[1]]->Eta();
 		jet2phi_f=jets[jetindexphoton12_f[1]]->Phi();
 		jet2e_f=jets[jetindexphoton12_f[1]]->E();
-		/*		jet2e_JEC_up_f=jets_JEC_up[jetindexphoton12_f[1]]->E();
-				jet2e_JEC_down_f=jets_JEC_down[jetindexphoton12_f[1]]->E();
-				jet2e_JER_up_f=jets_JER_up[jetindexphoton12_f[1]]->E();
-				jet2e_JER_down_f=jets_JER_down[jetindexphoton12_f[1]]->E();
-		 */		jet1csv_f =(*ak4jets)[jetindexphoton12_f[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
+		jet2e_f_new=jets_new[jetindexphoton12_f[1]]->E();
+		jet2e_JEC_up_f=jets_JEC_up[jetindexphoton12_f[1]]->E();
+		jet2e_JEC_down_f=jets_JEC_down[jetindexphoton12_f[1]]->E();
+		jet2e_JER_up_f=jets_JER_up[jetindexphoton12_f[1]]->E();
+		jet2e_JER_down_f=jets_JER_down[jetindexphoton12_f[1]]->E();
+		jet1csv_f =(*ak4jets)[jetindexphoton12_f[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
 		jet2csv_f =(*ak4jets)[jetindexphoton12_f[1]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
 		jet1icsv_f =(*ak4jets)[jetindexphoton12_f[0]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
 		jet2icsv_f =(*ak4jets)[jetindexphoton12_f[1]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
@@ -1765,28 +1797,31 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		Mjj_f=(j1p4_f + j2p4_f).M();
 		deltaeta_f = fabs(jet1eta_f - jet2eta_f);
 		zepp_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1p4_f.SetPtEtaPhiE(jet1pt_f_new, jet1eta_f, jet1phi_f, jet1e_f_new);
+		j2p4_f.SetPtEtaPhiE(jet2pt_f_new, jet2eta_f, jet2phi_f, jet2e_f_new);
+		Mjj_f_new=(j1p4_f + j2p4_f).M();
+		zepp_f_new = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1p4_f.SetPtEtaPhiE(jet1pt_JEC_up_f, jet1eta_f, jet1phi_f, jet1e_JEC_up_f);
+		j2p4_f.SetPtEtaPhiE(jet2pt_JEC_up_f, jet2eta_f, jet2phi_f, jet2e_JEC_up_f);
+		Mjj_JEC_up_f=(j1p4_f + j2p4_f).M();
+		zepp_JEC_up_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1p4_f.SetPtEtaPhiE(jet1pt_JEC_down_f, jet1eta_f, jet1phi_f, jet1e_JEC_down_f);
+		j2p4_f.SetPtEtaPhiE(jet2pt_JEC_down_f, jet2eta_f, jet2phi_f, jet2e_JEC_down_f);
+		Mjj_JEC_down_f=(j1p4_f + j2p4_f).M();
+		zepp_JEC_down_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1p4_f.SetPtEtaPhiE(jet1pt_JER_up_f, jet1eta_f, jet1phi_f, jet1e_JER_up_f);
+		j2p4_f.SetPtEtaPhiE(jet2pt_JER_up_f, jet2eta_f, jet2phi_f, jet2e_JER_up_f);
+		Mjj_JER_up_f=(j1p4_f + j2p4_f).M();
+		zepp_JER_up_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1p4_f.SetPtEtaPhiE(jet1pt_JER_down_f, jet1eta_f, jet1phi_f, jet1e_JER_down_f);
+		j2p4_f.SetPtEtaPhiE(jet2pt_JER_down_f, jet2eta_f, jet2phi_f, jet2e_JER_down_f);
+		Mjj_JER_down_f=(j1p4_f + j2p4_f).M();
+		zepp_JER_down_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+	}
 
-		/*		j1p4_f.SetPtEtaPhiE(jet1pt_JEC_up_f, jet1eta_f, jet1phi_f, jet1e_JEC_up_f);
-				j2p4_f.SetPtEtaPhiE(jet2pt_JEC_up_f, jet2eta_f, jet2phi_f, jet2e_JEC_up_f);
-				Mjj_JEC_up_f=(j1p4_f + j2p4_f).M();
-				zepp_JEC_up_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
-				j1p4_f.SetPtEtaPhiE(jet1pt_JEC_down_f, jet1eta_f, jet1phi_f, jet1e_JEC_down_f);
-				j2p4_f.SetPtEtaPhiE(jet2pt_JEC_down_f, jet2eta_f, jet2phi_f, jet2e_JEC_down_f);
-				Mjj_JEC_down_f=(j1p4_f + j2p4_f).M();
-				zepp_JEC_down_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
-				j1p4_f.SetPtEtaPhiE(jet1pt_JER_up_f, jet1eta_f, jet1phi_f, jet1e_JER_up_f);
-				j2p4_f.SetPtEtaPhiE(jet2pt_JER_up_f, jet2eta_f, jet2phi_f, jet2e_JER_up_f);
-				Mjj_JER_up_f=(j1p4_f + j2p4_f).M();
-				zepp_JER_up_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
-				j1p4_f.SetPtEtaPhiE(jet1pt_JER_down_f, jet1eta_f, jet1phi_f, jet1e_JER_down_f);
-				j2p4_f.SetPtEtaPhiE(jet2pt_JER_down_f, jet2eta_f, jet2phi_f, jet2e_JER_down_f);
-				Mjj_JER_down_f=(j1p4_f + j2p4_f).M();
-				zepp_JER_down_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
-		 */	}
-
-		outTree_->Fill();
-		delete jecAK4_;
-		jecAK4_=0;
+	outTree_->Fill();
+	delete jecAK4_;
+	jecAK4_=0;
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------//
@@ -1907,17 +1942,17 @@ void ZPKUTreeMaker::setDummyValues() {
 		ak4jet_phi[i]=-1e1;
 		ak4jet_e_old[i]=-1e1;
 		ak4jet_e_new[i]=-1e1;
-		/*		ak4jet_pt[i]=-1e1;
-				ak4jet_e[i]=-1e1;
-				ak4jet_pt_JEC_up[i]=-1e1;
-				ak4jet_pt_JEC_down[i]=-1e1;
-				ak4jet_e_JEC_up[i]=-1e1;
-				ak4jet_e_JEC_down[i]=-1e1;
-				ak4jet_pt_JER_up[i]=-1e1;
-				ak4jet_pt_JER_down[i]=-1e1;
-				ak4jet_e_JER_up[i]=-1e1;
-				ak4jet_e_JER_down[i]=-1e1;
-		 */		ak4jet_csv[i]=-1e1;
+		ak4jet_pt[i]=-1e1;
+		ak4jet_e[i]=-1e1;
+		ak4jet_pt_JEC_up[i]=-1e1;
+		ak4jet_pt_JEC_down[i]=-1e1;
+		ak4jet_e_JEC_up[i]=-1e1;
+		ak4jet_e_JEC_down[i]=-1e1;
+		ak4jet_pt_JER_up[i]=-1e1;
+		ak4jet_pt_JER_down[i]=-1e1;
+		ak4jet_e_JER_up[i]=-1e1;
+		ak4jet_e_JER_down[i]=-1e1;
+		ak4jet_csv[i]=-1e1;
 		ak4jet_icsv[i]=-1e1;
 	}
 
@@ -1942,24 +1977,28 @@ void ZPKUTreeMaker::setDummyValues() {
 	isTrue_=-1;
 	isprompt_=-1; 
 	jet1pt=-1e1;  jet1pt_f=-1e1;
-	/*	jet1pt_JEC_up=-1e1; jet1pt_JEC_down=-1e1; jet1pt_JER_up=-1e1; jet1pt_JER_down=-1e1;
-		jet1pt_JEC_up_f=-1e1; jet1pt_JEC_down_f=-1e1; jet1pt_JER_up_f=-1e1; jet1pt_JER_down_f=-1e1;
-	 */	jet1eta=-1e1;  jet1eta_f=-1e1;
+	jet1pt_new=-1e1;  jet1pt_f_new=-1e1;
+	jet1pt_JEC_up=-1e1; jet1pt_JEC_down=-1e1; jet1pt_JER_up=-1e1; jet1pt_JER_down=-1e1;
+	jet1pt_JEC_up_f=-1e1; jet1pt_JEC_down_f=-1e1; jet1pt_JER_up_f=-1e1; jet1pt_JER_down_f=-1e1;
+	jet1eta=-1e1;  jet1eta_f=-1e1;
 	jet1phi=-1e1;  jet1phi_f=-1e1;
 	jet1e=-1e1;  jet1e_f=-1e1;
-	/*	jet1e_JEC_up=-1e1; jet1e_JEC_down=-1e1; jet1e_JER_up=-1e1; jet1e_JER_down=-1e1;
-		jet1e_JEC_up_f=-1e1; jet1e_JEC_down_f=-1e1; jet1e_JER_up_f=-1e1; jet1e_JER_down_f=-1e1;
-	 */	jet1csv=-1e1;  jet1csv_f=-1e1;
+	jet1e_new=-1e1;  jet1e_f_new=-1e1;
+	jet1e_JEC_up=-1e1; jet1e_JEC_down=-1e1; jet1e_JER_up=-1e1; jet1e_JER_down=-1e1;
+	jet1e_JEC_up_f=-1e1; jet1e_JEC_down_f=-1e1; jet1e_JER_up_f=-1e1; jet1e_JER_down_f=-1e1;
+	jet1csv=-1e1;  jet1csv_f=-1e1;
 	jet1icsv=-1e1;  jet1icsv_f=-1e1;
 	jet2pt=-1e1;  jet2pt_f=-1e1;
-	/*	jet2pt_JEC_up=-1e1; jet2pt_JEC_down=-1e1; jet2pt_JER_up=-1e1; jet2pt_JER_down=-1e1;
-		jet2pt_JEC_up_f=-1e1; jet2pt_JEC_down_f=-1e1; jet2pt_JER_up_f=-1e1; jet2pt_JER_down_f=-1e1;
-	 */	jet2eta=-1e1;  jet2eta_f=-1e1;
+	jet2pt_new=-1e1;  jet2pt_f_new=-1e1;
+	jet2pt_JEC_up=-1e1; jet2pt_JEC_down=-1e1; jet2pt_JER_up=-1e1; jet2pt_JER_down=-1e1;
+	jet2pt_JEC_up_f=-1e1; jet2pt_JEC_down_f=-1e1; jet2pt_JER_up_f=-1e1; jet2pt_JER_down_f=-1e1;
+	jet2eta=-1e1;  jet2eta_f=-1e1;
 	jet2phi=-1e1;  jet2phi_f=-1e1;
 	jet2e=-1e1;  jet2e_f=-1e1;
-	/*	jet2e_JEC_up=-1e1; jet2e_JEC_down=-1e1; jet2e_JER_up=-1e1; jet2e_JER_down=-1e1;
-		jet2e_JEC_up_f=-1e1; jet2e_JEC_down_f=-1e1; jet2e_JER_up_f=-1e1; jet2e_JER_down_f=-1e1;
-	 */	jet2csv=-1e1;  jet2csv_f=-1e1;
+	jet2e_new=-1e1;  jet2e_f_new=-1e1;
+	jet2e_JEC_up=-1e1; jet2e_JEC_down=-1e1; jet2e_JER_up=-1e1; jet2e_JER_down=-1e1;
+	jet2e_JEC_up_f=-1e1; jet2e_JEC_down_f=-1e1; jet2e_JER_up_f=-1e1; jet2e_JER_down_f=-1e1;
+	jet2csv=-1e1;  jet2csv_f=-1e1;
 	jet2icsv=-1e1;  jet2icsv_f=-1e1;
 	drj1a=1e1;  drj1a_f=1e1;
 	drj2a=1e1;  drj2a_f=1e1;
@@ -1968,13 +2007,15 @@ void ZPKUTreeMaker::setDummyValues() {
 	drj1l2=1e1;  drj1l2_f=1e1;
 	drj2l2=1e1;  drj2l2_f=1e1;
 	Mjj=-1e1;   Mjj_f=-1e1;
-	/*	Mjj_JEC_up=-1e1; Mjj_JEC_down=-1e1; Mjj_JER_up=-1e1; Mjj_JER_down=-1e1;
-		Mjj_JEC_up_f=-1e1; Mjj_JEC_down_f=-1e1; Mjj_JER_up_f=-1e1; Mjj_JER_down_f=-1e1;
-	 */	deltaeta=-1e1;   deltaeta_f=-1e1;
+	Mjj_new=-1e1;   Mjj_f_new=-1e1;
+	Mjj_JEC_up=-1e1; Mjj_JEC_down=-1e1; Mjj_JER_up=-1e1; Mjj_JER_down=-1e1;
+	Mjj_JEC_up_f=-1e1; Mjj_JEC_down_f=-1e1; Mjj_JER_up_f=-1e1; Mjj_JER_down_f=-1e1;
+	deltaeta=-1e1;   deltaeta_f=-1e1;
 	zepp=-1e1;   zepp_f=-1e1;
-	/*	zepp_JEC_up=-1e1; zepp_JEC_down=-1e1; zepp_JER_up=-1e1; zepp_JER_down=-1e1;
-		zepp_JEC_up_f=-1e1; zepp_JEC_down_f=-1e1; zepp_JER_up_f=-1e1; zepp_JER_down_f=-1e1;
-	 */	
+	zepp_new=-1e1;   zepp_f_new=-1e1;
+	zepp_JEC_up=-1e1; zepp_JEC_down=-1e1; zepp_JER_up=-1e1; zepp_JER_down=-1e1;
+	zepp_JEC_up_f=-1e1; zepp_JEC_down_f=-1e1; zepp_JER_up_f=-1e1; zepp_JER_down_f=-1e1;
+
 
 	HLT_Ele1=-99;
 	HLT_Ele2=-99;
