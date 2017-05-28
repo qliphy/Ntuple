@@ -1850,7 +1850,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	//two leading jets, new
 	for (size_t i=0;i<jets_new.size();i++) {
                 if(iphoton>-1) {
-                        double drtmp1=deltaR(jets_new.at(i)->Eta(), jetsnew.at(i)->Phi(), photoneta,photonphi);
+                        double drtmp1=deltaR(jets_new.at(i)->Eta(), jets_new.at(i)->Phi(), photoneta,photonphi);
                         if(drtmp1>0.5 && jetindexphoton12_new[0]==-1&&jetindexphoton12_new[1]==-1) {
                                 jetindexphoton12_new[0] = i;
                                 continue;
@@ -1891,7 +1891,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         for (size_t i=0;i<jets_JEC_up.size();i++) {
-                if(iphoton_JEC_up_f>-1) {
+                if(iphoton_f>-1) {
                         double drtmp1_f=deltaR(jets_JEC_up.at(i)->Eta(), jets_JEC_up.at(i)->Phi(), photoneta_f,photonphi_f);
                         if(drtmp1_f>0.5 && jetindexphoton12_JEC_up_f[0]==-1&&jetindexphoton12_JEC_up_f[1]==-1) {
                                 jetindexphoton12_JEC_up_f[0] = i;
@@ -1919,7 +1919,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         for (size_t i=0;i<jets_JEC_down.size();i++) {
-                if(iphoton_JEC_down_f>-1) {
+                if(iphoton_f>-1) {
                         double drtmp1_f=deltaR(jets_JEC_down.at(i)->Eta(), jets_JEC_down.at(i)->Phi(), photoneta_f,photonphi_f);
                         if(drtmp1_f>0.5 && jetindexphoton12_JEC_down_f[0]==-1&&jetindexphoton12_JEC_down_f[1]==-1) {
                                 jetindexphoton12_JEC_down_f[0] = i;
@@ -1947,7 +1947,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         for (size_t i=0;i<jets_JER_up.size();i++) {
-                if(iphoton_JER_up_f>-1) {
+                if(iphoton_f>-1) {
                         double drtmp1_f=deltaR(jets_JER_up.at(i)->Eta(), jets_JER_up.at(i)->Phi(), photoneta_f,photonphi_f);
                         if(drtmp1_f>0.5 && jetindexphoton12_JER_up_f[0]==-1&&jetindexphoton12_JER_up_f[1]==-1) {
                                 jetindexphoton12_JER_up_f[0] = i;
@@ -1975,7 +1975,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         for (size_t i=0;i<jets_JER_down.size();i++) {
-                if(iphoton_JER_down_f>-1) {
+                if(iphoton_f>-1) {
                         double drtmp1_f=deltaR(jets_JER_down.at(i)->Eta(), jets_JER_down.at(i)->Phi(), photoneta_f,photonphi_f);
                         if(drtmp1_f>0.5 && jetindexphoton12_JER_down_f[0]==-1&&jetindexphoton12_JER_down_f[1]==-1) {
                                 jetindexphoton12_JER_down_f[0] = i;
@@ -2245,39 +2245,39 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 
 	if(jetindexphoton12_new_f[0]>-1 && jetindexphoton12_new_f[1]>-1) {
-		jet1pt_new_f=jets[jetindexphoton12_new_f[0]]->Pt();
-		jet1eta_new_f=jets[jetindexphoton12_new_f[0]]->Eta();
-		jet1phi_new_f=jets[jetindexphoton12_new_f[0]]->Phi();
-		jet1e_new_f=jets[jetindexphoton12_new_f[0]]->E();
-		jet2pt_new_f=jets[jetindexphoton12_new_f[1]]->Pt();
-		jet2eta_new_f=jets[jetindexphoton12_new_f[1]]->Eta();
-		jet2phi_new_f=jets[jetindexphoton12_new_f[1]]->Phi();
-		jet2e_new_f=jets[jetindexphoton12_new_f[1]]->E();
-		jet1csv_new_f =(*ak4jets)[jetindexphoton12_new_f[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
-		jet2csv_new_f =(*ak4jets)[jetindexphoton12_new_f[1]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
-		jet1icsv_new_f =(*ak4jets)[jetindexphoton12_new_f[0]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
-		jet2icsv_new_f =(*ak4jets)[jetindexphoton12_new_f[1]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
-		drj1a_new_f=deltaR(jet1eta_new_f,jet1phi_new_f,photoneta_new_f,photonphi_new_f);
-		drj2a_new_f=deltaR(jet2eta_new_f,jet2phi_new_f,photoneta_new_f,photonphi_new_f);
-		drj1l_new_f=deltaR(jet1eta_new_f,jet1phi_new_f,etalep1,philep1);
-		drj2l_new_f=deltaR(jet2eta_new_f,jet2phi_new_f,etalep1,philep1);
-		drj1l2_new_f=deltaR(jet1eta_new_f,jet1phi_new_f,etalep2,philep2);
-		drj2l2_new_f=deltaR(jet2eta_new_f,jet2phi_new_f,etalep2,philep2);
+		jet1pt_f_new=jets[jetindexphoton12_new_f[0]]->Pt();
+		jet1eta_f_new=jets[jetindexphoton12_f_new[0]]->Eta();
+		jet1phi_f_new=jets[jetindexphoton12_f_new[0]]->Phi();
+		jet1e_f_new=jets[jetindexphoton12_f_new[0]]->E();
+		jet2pt_f_new=jets[jetindexphoton12_f_new[1]]->Pt();
+		jet2eta_f_new=jets[jetindexphoton12_f_new[1]]->Eta();
+		jet2phi_f_new=jets[jetindexphoton12_f_new[1]]->Phi();
+		jet2e_f_new=jets[jetindexphoton12_f_new[1]]->E();
+		jet1csv_f_new =(*ak4jets)[jetindexphoton12_f_new[0]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
+		jet2csv_f_new =(*ak4jets)[jetindexphoton12_f_new[1]].bDiscriminator("pfCombinedSecondaryVertexV2BJetTags");
+		jet1icsv_f_new =(*ak4jets)[jetindexphoton12_f_new[0]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
+		jet2icsv_f_new =(*ak4jets)[jetindexphoton12_f_new[1]].bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
+		drj1a_f_new=deltaR(jet1eta_f_new,jet1phi_f_new,photoneta_f_new,photonphi_f_new);
+		drj2a_f_new=deltaR(jet2eta_f_new,jet2phi_f_new,photoneta_f_new,photonphi_f_new);
+		drj1l_f_new=deltaR(jet1eta_f_new,jet1phi_f_new,etalep1,philep1);
+		drj2l_f_new=deltaR(jet2eta_f_new,jet2phi_f_new,etalep1,philep1);
+		drj1l2_f_new=deltaR(jet1eta_f_new,jet1phi_f_new,etalep2,philep2);
+		drj2l2_f_new=deltaR(jet2eta_f_new,jet2phi_f_new,etalep2,philep2);
 		TLorentzVector j1p4_f;
-		j1p4_f.SetPtEtaPhiE(jet1pt_new_f, jet1eta_new_f, jet1phi_new_f, jet1e_new_f);
+		j1p4_f.SetPtEtaPhiE(jet1pt_f_new, jet1eta_f_new, jet1phi_f_new, jet1e_f_new);
 		TLorentzVector j2p4_f;
-		j2p4_f.SetPtEtaPhiE(jet2pt_new_f, jet2eta_new_f, jet2phi_new_f, jet2e_new_f);
+		j2p4_f.SetPtEtaPhiE(jet2pt_f_new, jet2eta_f_new, jet2phi_f_new, jet2e_f_new);
 		TLorentzVector photonp42_f;
 		photonp42_f.SetPtEtaPhiE(photonet_f, photoneta_f, photonphi_f, photone_f);
 		TLorentzVector vp4_f;
 		vp4_f.SetPtEtaPhiE(leptonicV.pt(), leptonicV.eta(), leptonicV.phi(), leptonicV.energy());
-		j1metPhi_new_f=fabs(jet1phi_new_f-MET_phi_new);
-		if(j1metPhi_new_f>Pi) {j1metPhi_new_f=2.0*Pi-j1metPhi_new_f;}
-		j2metPhi_new_f=fabs(jet2phi_new_f-MET_phi_new);
-		if(j2metPhi_new_f>Pi) {j2metPhi_new_f=2.0*Pi-j2metPhi_new_f;}
-		Mjj_new_f=(j1p4_f + j2p4_f).M();
-		deltaeta_new_f = fabs(jet1eta_new_f - jet2eta_new_f);
-		zepp_new_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
+		j1metPhi_f_new=fabs(jet1phi_f_new-MET_phi_new);
+		if(j1metPhi_f_new>Pi) {j1metPhi_f_new=2.0*Pi-j1metPhi_f_new;}
+		j2metPhi_f_new=fabs(jet2phi_f_new-MET_phi_new);
+		if(j2metPhi_f_new>Pi) {j2metPhi_f_new=2.0*Pi-j2metPhi_f_new;}
+		Mjj_f_new=(j1p4_f + j2p4_f).M();
+		deltaeta_f_new = fabs(jet1eta_f_new - jet2eta_f_new);
+		zepp_f_new = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
 	}
 
 	if(jetindexphoton12_JEC_up_f[0]>-1 && jetindexphoton12_JEC_up_f[1]>-1) {
@@ -2585,31 +2585,73 @@ void ZPKUTreeMaker::setDummyValues() {
 	jet1pt_JEC_up=-1e1; jet1pt_JEC_down=-1e1; jet1pt_JER_up=-1e1; jet1pt_JER_down=-1e1;
 	jet1pt_JEC_up_f=-1e1; jet1pt_JEC_down_f=-1e1; jet1pt_JER_up_f=-1e1; jet1pt_JER_down_f=-1e1;
 	jet1eta=-1e1;  jet1eta_f=-1e1;
+	jet1eta_new=-1e1;  jet1eta_f_new=-1e1;
+	jet1eta_JEC_up=-1e1; jet1eta_JEC_down=-1e1; jet1eta_JER_up=-1e1; jet1eta_JER_down=-1e1;
+	jet1eta_JEC_up_f=-1e1; jet1eta_JEC_down_f=-1e1; jet1eta_JER_up_f=-1e1; jet1eta_JER_down_f=-1e1;
 	jet1phi=-1e1;  jet1phi_f=-1e1;
+	jet1phi_new=-1e1;  jet1phi_f_new=-1e1;
+	jet1phi_JEC_up=-1e1; jet1phi_JEC_down=-1e1; jet1phi_JER_up=-1e1; jet1phi_JER_down=-1e1;
+	jet1phi_JEC_up_f=-1e1; jet1phi_JEC_down_f=-1e1; jet1phi_JER_up_f=-1e1; jet1phi_JER_down_f=-1e1;
 	jet1e=-1e1;  jet1e_f=-1e1;
 	jet1e_new=-1e1;  jet1e_f_new=-1e1;
 	jet1e_JEC_up=-1e1; jet1e_JEC_down=-1e1; jet1e_JER_up=-1e1; jet1e_JER_down=-1e1;
 	jet1e_JEC_up_f=-1e1; jet1e_JEC_down_f=-1e1; jet1e_JER_up_f=-1e1; jet1e_JER_down_f=-1e1;
 	jet1csv=-1e1;  jet1csv_f=-1e1;
+	jet1csv_new=-1e1;  jet1csv_f_new=-1e1;
+	jet1csv_JEC_up=-1e1; jet1csv_JEC_down=-1e1; jet1csv_JER_up=-1e1; jet1csv_JER_down=-1e1;
+	jet1csv_JEC_up_f=-1e1; jet1csv_JEC_down_f=-1e1; jet1csv_JER_up_f=-1e1; jet1csv_JER_down_f=-1e1;
 	jet1icsv=-1e1;  jet1icsv_f=-1e1;
+	jet1icsv_new=-1e1;  jet1icsv_f_new=-1e1;
+	jet1icsv_JEC_up=-1e1; jet1icsv_JEC_down=-1e1; jet1icsv_JER_up=-1e1; jet1icsv_JER_down=-1e1;
+	jet1icsv_JEC_up_f=-1e1; jet1icsv_JEC_down_f=-1e1; jet1icsv_JER_up_f=-1e1; jet1icsv_JER_down_f=-1e1;
 	jet2pt=-1e1;  jet2pt_f=-1e1;
 	jet2pt_new=-1e1;  jet2pt_f_new=-1e1;
 	jet2pt_JEC_up=-1e1; jet2pt_JEC_down=-1e1; jet2pt_JER_up=-1e1; jet2pt_JER_down=-1e1;
 	jet2pt_JEC_up_f=-1e1; jet2pt_JEC_down_f=-1e1; jet2pt_JER_up_f=-1e1; jet2pt_JER_down_f=-1e1;
 	jet2eta=-1e1;  jet2eta_f=-1e1;
+	jet2eta_new=-1e1;  jet2eta_f_new=-1e1;
+	jet2eta_JEC_up=-1e1; jet2eta_JEC_down=-1e1; jet2eta_JER_up=-1e1; jet2eta_JER_down=-1e1;
+	jet2eta_JEC_up_f=-1e1; jet2eta_JEC_down_f=-1e1; jet2eta_JER_up_f=-1e1; jet2eta_JER_down_f=-1e1;
 	jet2phi=-1e1;  jet2phi_f=-1e1;
+	jet2phi_new=-1e1;  jet2phi_f_new=-1e1;
+	jet2phi_JEC_up=-1e1; jet2phi_JEC_down=-1e1; jet2phi_JER_up=-1e1; jet2phi_JER_down=-1e1;
+	jet2phi_JEC_up_f=-1e1; jet2phi_JEC_down_f=-1e1; jet2phi_JER_up_f=-1e1; jet2phi_JER_down_f=-1e1;
 	jet2e=-1e1;  jet2e_f=-1e1;
 	jet2e_new=-1e1;  jet2e_f_new=-1e1;
 	jet2e_JEC_up=-1e1; jet2e_JEC_down=-1e1; jet2e_JER_up=-1e1; jet2e_JER_down=-1e1;
 	jet2e_JEC_up_f=-1e1; jet2e_JEC_down_f=-1e1; jet2e_JER_up_f=-1e1; jet2e_JER_down_f=-1e1;
 	jet2csv=-1e1;  jet2csv_f=-1e1;
+	jet2csv_new=-1e1;  jet2csv_f_new=-1e1;
+	jet2csv_JEC_up=-1e1; jet2csv_JEC_down=-1e1; jet2csv_JER_up=-1e1; jet2csv_JER_down=-1e1;
+	jet2csv_JEC_up_f=-1e1; jet2csv_JEC_down_f=-1e1; jet2csv_JER_up_f=-1e1; jet2csv_JER_down_f=-1e1;
 	jet2icsv=-1e1;  jet2icsv_f=-1e1;
+	jet2icsv_new=-1e1;  jet2icsv_f_new=-1e1;
+	jet2icsv_JEC_up=-1e1; jet2icsv_JEC_down=-1e1; jet2icsv_JER_up=-1e1; jet2icsv_JER_down=-1e1;
+	jet2icsv_JEC_up_f=-1e1; jet2icsv_JEC_down_f=-1e1; jet2icsv_JER_up_f=-1e1; jet2icsv_JER_down_f=-1e1;
 	drj1a=1e1;  drj1a_f=1e1;
+	drj1a_new=-1e1;  drj1a_f_new=-1e1;
+	drj1a_JEC_up=-1e1; drj1a_JEC_down=-1e1; drj1a_JER_up=-1e1; drj1a_JER_down=-1e1;
+	drj1a_JEC_up_f=-1e1; drj1a_JEC_down_f=-1e1; drj1a_JER_up_f=-1e1; drj1a_JER_down_f=-1e1;
 	drj2a=1e1;  drj2a_f=1e1;
+	drj2a_new=-1e1;  drj2a_f_new=-1e1;
+	drj2a_JEC_up=-1e1; drj2a_JEC_down=-1e1; drj2a_JER_up=-1e1; drj2a_JER_down=-1e1;
+	drj2a_JEC_up_f=-1e1; drj2a_JEC_down_f=-1e1; drj2a_JER_up_f=-1e1; drj2a_JER_down_f=-1e1;
 	drj1l=1e1;  drj1l_f=1e1;
+	drj1l_new=-1e1;  drj1l_f_new=-1e1;
+	drj1l_JEC_up=-1e1; drj1l_JEC_down=-1e1; drj1l_JER_up=-1e1; drj1l_JER_down=-1e1;
+	drj1l_JEC_up_f=-1e1; drj1l_JEC_down_f=-1e1; drj1l_JER_up_f=-1e1; drj1l_JER_down_f=-1e1;
 	drj2l=1e1;  drj2l_f=1e1;
+	drj2l_new=-1e1;  drj2l_f_new=-1e1;
+	drj2l_JEC_up=-1e1; drj2l_JEC_down=-1e1; drj2l_JER_up=-1e1; drj2l_JER_down=-1e1;
+	drj2l_JEC_up_f=-1e1; drj2l_JEC_down_f=-1e1; drj2l_JER_up_f=-1e1; drj2l_JER_down_f=-1e1;
 	drj1l2=1e1;  drj1l2_f=1e1;
+	drj1l2_new=-1e1;  drj1l2_f_new=-1e1;
+	drj1l2_JEC_up=-1e1; drj1l2_JEC_down=-1e1; drj1l2_JER_up=-1e1; drj1l2_JER_down=-1e1;
+	drj1l2_JEC_up_f=-1e1; drj1l2_JEC_down_f=-1e1; drj1l2_JER_up_f=-1e1; drj1l2_JER_down_f=-1e1;
 	drj2l2=1e1;  drj2l2_f=1e1;
+	drj2l2_new=-1e1;  drj2l2_f_new=-1e1;
+	drj2l2_JEC_up=-1e1; drj2l2_JEC_down=-1e1; drj2l2_JER_up=-1e1; drj2l2_JER_down=-1e1;
+	drj2l2_JEC_up_f=-1e1; drj2l2_JEC_down_f=-1e1; drj2l2_JER_up_f=-1e1; drj2l2_JER_down_f=-1e1;
 	Mjj=-1e1;   Mjj_f=-1e1;
 	Mjj_new=-1e1;   Mjj_f_new=-1e1;
 	Mjj_JEC_up=-1e1; Mjj_JEC_down=-1e1; Mjj_JER_up=-1e1; Mjj_JER_down=-1e1;
