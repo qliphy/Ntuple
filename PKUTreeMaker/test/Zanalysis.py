@@ -9,6 +9,9 @@ chsorpuppi = True  # AK4Chs or AK4Puppi
 #****************************************************************************************************#
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_condDBv2_cff')
+process.load("Configuration.StandardSequences.MagneticField_38T_cff")
+process.load("RecoTracker.CkfPattern.CkfTrackCandidates_cff")
+process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi")
 from Configuration.AlCa.GlobalTag import GlobalTag
 if runOnMC:
    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
@@ -34,9 +37,73 @@ process.goodMuons.src = "slimmedMuons"
 process.goodElectrons.src = "slimmedElectrons"
 process.goodPhotons.src = "slimmedPhotons"
 
+# jerc uncer 2017/5/7
+if chsorpuppi:
+        jLabel = "slimmedJets"
+        jetAlgo    = 'AK4PFchs'
+else:
+      jLabel = "slimmedJetsPuppi"
+      jetAlgo    = 'AK4PFPuppi'
+
+jer_era = "Summer16_23Sep2016V3_MC"
+triggerResultsLabel      = "TriggerResults"
+triggerSummaryLabel      = "hltTriggerSummaryAOD"
+hltProcess = "HLT"
+
+#begin------------JEC on the fly--------
+if runOnMC:
+   jecLevelsAK4chs = [
+          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
+          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
+          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
+    ]
+   jecLevelsAK4puppi = [
+          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
+          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
+          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
+    ]
+else:
+   jecLevelsAK4chs = [
+          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
+    ]
+   jecLevelsAK4puppi = [
+          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
+          'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
+    ]
+#end------------JEC on the fly--------
+
+process.JetUserData = cms.EDProducer(
+   'JetUserData',
+   jetLabel          = cms.InputTag(jLabel),
+   rho               = cms.InputTag("fixedGridRhoFastjetAll"),
+   coneSize          = cms.double(0.4),
+   getJERFromTxt     = cms.bool(False),
+   jetCorrLabel      = cms.string(jetAlgo),
+   jerLabel          = cms.string(jetAlgo),
+   resolutionsFile   = cms.string(jer_era+'_PtResolution_'+jetAlgo+'.txt'),
+   scaleFactorsFile  = cms.string(jer_era+'_SF_'+jetAlgo+'.txt'),
+   ### TTRIGGER ###
+   triggerResults = cms.InputTag(triggerResultsLabel,"",hltProcess),
+   triggerSummary = cms.InputTag(triggerSummaryLabel,"",hltProcess),
+   hltJetFilter       = cms.InputTag("hltPFHT"),
+   hltPath            = cms.string("HLT_PFHT800"),
+   hlt2reco_deltaRmax = cms.double(0.2),
+   candSVTagInfos         = cms.string("pfInclusiveSecondaryVertexFinder"), 
+   jecAK4chsPayloadNames_jetUserdata = cms.vstring( jecLevelsAK4chs ),
+   vertex_jetUserdata = cms.InputTag("offlineSlimmedPrimaryVertices")
+   )
+#jerc uncer Meng
+
 process.load("VAJets.PKUCommon.goodJets_cff") 
 if chsorpuppi:
-      process.goodAK4Jets.src = "slimmedJets"
+#      process.goodAK4Jets.src = "slimmedJets"
+	process.goodAK4Jets.src = "JetUserData"
+	# jerc uncer Meng
 else:
       process.goodAK4Jets.src = "slimmedJetsPuppi"
 
@@ -77,32 +144,6 @@ process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
 process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 process.metfilterSequence = cms.Sequence(process.BadPFMuonFilter+process.BadChargedCandidateFilter)
 
-#begin------------JEC on the fly--------
-if runOnMC:
-   jecLevelsAK4chs = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt'
-    ]
-   jecLevelsAK4puppi = [
-          'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFPuppi.txt'
-    ]
-else:
-   jecLevelsAK4chs = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt'
-    ]
-   jecLevelsAK4puppi = [
-          'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFPuppi.txt',
-          'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFPuppi.txt',
-	  'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFPuppi.txt'
-    ]
-#end------------JEC on the fly--------
 if chsorpuppi:
       ak4jecsrc = jecLevelsAK4chs
 else:
@@ -130,13 +171,15 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     jecAK4PayloadNames = cms.vstring( ak4jecsrc ),
                                     metSrc = cms.InputTag("slimmedMETs"),
                                     vertex = cms.InputTag("offlineSlimmedPrimaryVertices"),  
-                                    t1jetSrc = cms.InputTag("slimmedJets"),      
+                                    t1jetSrc_user = cms.InputTag("JetUserData"),
+				    t1jetSrc = cms.InputTag("slimmedJets"),      
                                     t1muSrc = cms.InputTag("slimmedMuons"),       
                                     looseelectronSrc = cms.InputTag("vetoElectrons"),
                                     electrons = cms.InputTag("slimmedElectrons"),
                                     conversions = cms.InputTag("reducedEgamma","reducedConversions",reducedConversionsName),
                                     beamSpot = cms.InputTag("offlineBeamSpot","","RECO"),
                                     loosemuonSrc = cms.InputTag("looseMuons"),
+				    goodmuonSrc = cms.InputTag("goodMuons"),# station2 retrieve, 2017/3/26
                                     hltToken    = cms.InputTag("TriggerResults","","HLT"),
 				    elPaths1     = cms.vstring("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v*"),
                                     elPaths2     = cms.vstring("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*"),
@@ -144,6 +187,10 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
                                     muPaths2     = cms.vstring("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*", "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*"),
 				    muPaths3    = cms.vstring("HLT_IsoMu24_v*"), 
 				    muPaths4    = cms.vstring("HLT_Mu17_v*"),
+				    muPaths5     = cms.vstring("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*", "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*"),
+				    muPaths6     = cms.vstring("HLT_IsoMu22_v*", "HLT_IsoTkMu22_v*"),
+				    muPaths7     = cms.vstring("HLT_IsoMu24_v*", "HLT_IsoTkMu24_v*"),
+				    muPaths8     = cms.vstring("HLT_IsoMu27_v*", "HLT_IsoTkMu27_v*"),
 				    noiseFilter = cms.InputTag('TriggerResults','', hltFiltersProcessName),
 				    noiseFilterSelection_HBHENoiseFilter = cms.string('Flag_HBHENoiseFilter'),
                                     noiseFilterSelection_HBHENoiseIsoFilter = cms.string("Flag_HBHENoiseIsoFilter"),
@@ -153,7 +200,11 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
 				    noiseFilterSelection_eeBadScFilter = cms.string('Flag_eeBadScFilter'),
                                     noiseFilterSelection_badMuon = cms.InputTag('BadPFMuonFilter'),
                                     noiseFilterSelection_badChargedHadron = cms.InputTag('BadChargedCandidateFilter'),
-                                    full5x5SigmaIEtaIEtaMap   = cms.InputTag("photonIDValueMapProducer:phoFull5x5SigmaIEtaIEta"),
+                #Meng
+                                    badMuonFilterSelection = cms.string('Flag_badMuons'),
+                                    duplicateMuonFilterSelection = cms.string('Flag_duplicateMuons'),
+                #Lu
+				    full5x5SigmaIEtaIEtaMap   = cms.InputTag("photonIDValueMapProducer:phoFull5x5SigmaIEtaIEta"),
                                     phoChargedIsolation = cms.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
                                     phoNeutralHadronIsolation = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
                                     phoPhotonIsolation = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
@@ -164,6 +215,7 @@ process.treeDumper = cms.EDAnalyzer("ZPKUTreeMaker",
 
 
 process.analysis = cms.Path(
+			    process.JetUserData +
 #                            process.goodOfflinePrimaryVertex +
                             process.leptonSequence +
                             process.jetSequence +
@@ -174,11 +226,11 @@ process.analysis = cms.Path(
 ### Source
 process.load("VAJets.PKUCommon.data.RSGravitonToWW_kMpl01_M_1000_Tune4C_13TeV_pythia8")
 process.source.fileNames = [
-"file:/eos/uscms/store/mc/RunIISpring16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/00000/F891569B-581B-E611-9F38-0CC47A4F1D16.root"
-#"/store/mc/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/04E807A8-9EBE-E611-ABE7-FA163EC9F0BF.root"
+#"file:/eos/uscms/store/mc/RunIISummer16MiniAODv2/TprimeTprimeToTHTH_HToGammaGamma_M-600_TuneCUETP8M2T4_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/60000/641784F0-2BD8-E611-ABC5-02163E013616.root"
+"/store/mc/RunIISummer16MiniAODv2/LLAJJ_EWK_MLL-50_MJJ-120_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/50000/08DCD9BB-2C25-E711-90C9-C454449229AF.root"
 ]
                        
-process.maxEvents.input = 100
+process.maxEvents.input = 1
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
