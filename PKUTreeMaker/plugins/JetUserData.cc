@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////
+///
+///	jet resolution only depends on the pt and eta of the jet, scale factor only depend on eta and rho. if the
+///	smeared jet is defined as the central value jet, the JER scale factor would be the same for central, JEC 
+///	up/down and JER up/down value. the difference would be the resolution and pt.
+///
+//////////////////////////////////////////////////////
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -253,7 +260,7 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jetParam.setJetPt(jetCorrFactor*(1+jecUncertainty_up)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
                 float PtResolution_JEC_up = resolution.getResolution(jetParam);
                 float JERSF_JEC_up        = res_sf.getScaleFactor(jetParam);
-		smearedP4_JEC_up *= get_JER_corr(JERSF_JEC_up, isMC, jet, coneSize_, PtResolution_JEC_up, jetCorrFactor);
+		smearedP4_JEC_up *= get_JER_corr(JERSF_JEC_up, isMC, jet, coneSize_, PtResolution_JEC_up, jetCorrFactor*(1+jecUncertainty_up));
 
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
 		jecUnc.setJetEta(jet.eta());
@@ -262,7 +269,7 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jetParam.setJetPt(jetCorrFactor*(1-jecUncertainty_down)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
                 float PtResolution_JEC_down = resolution.getResolution(jetParam);
                 float JERSF_JEC_down        = res_sf.getScaleFactor(jetParam);
-		smearedP4_JEC_down *= get_JER_corr(JERSF_JEC_down, isMC, jet, coneSize_, PtResolution_JEC_down, jetCorrFactor);
+		smearedP4_JEC_down *= get_JER_corr(JERSF_JEC_down, isMC, jet, coneSize_, PtResolution_JEC_down, jetCorrFactor*(1-jecUncertainty_down));
 
 		// JEC l1 uncertainty
 		jecUnc.setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
