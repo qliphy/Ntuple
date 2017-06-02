@@ -152,11 +152,11 @@ double JetUserData::get_JER_corr(float JERSF, bool isMC, pat::Jet jet, double co
 				isGenMatched = 1;
 				JER_corrFactor = std::max(0., 1 + (JERSF     - 1) * dPt / (jetCorrFactor*rawJetP4.pt()));
 			}
+		}
 			if (!isGenMatched && JERSF>1) {
 				double sigma = std::sqrt(JERSF * JERSF - 1) * PtResolution;
 				JER_corrFactor = 1 + rnd_.Gaus(0, sigma);
 			}
-		}
 	}
 	return JER_corrFactor;
 }
