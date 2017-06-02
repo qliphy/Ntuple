@@ -153,10 +153,10 @@ double JetUserData::get_JER_corr(float JERSF, bool isMC, pat::Jet jet, double co
 				JER_corrFactor = std::max(0., 1 + (JERSF     - 1) * dPt / (jetCorrFactor*rawJetP4.pt()));
 			}
 		}
-			if (!isGenMatched && JERSF>1) {
-				double sigma = std::sqrt(JERSF * JERSF - 1) * PtResolution;
-				JER_corrFactor = 1 + rnd_.Gaus(0, sigma);
-			}
+		if (!isGenMatched && JERSF>1) {
+			double sigma = std::sqrt(JERSF * JERSF - 1) * PtResolution;
+			JER_corrFactor = 1 + rnd_.Gaus(0, sigma);
+		}
 	}
 	return JER_corrFactor;
 }
@@ -165,18 +165,18 @@ double JetUserData::get_JER_corr(float JERSF, bool isMC, pat::Jet jet, double co
 void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 	std::vector<JetCorrectorParameters> vPar;
-        for ( std::vector<std::string>::const_iterator payloadBegin = jecAK4chsLabels_.begin(), payloadEnd = jecAK4chsLabels_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-                JetCorrectorParameters pars(*ipayload);
-                vPar.push_back(pars);
-        }
-        jecAK4_ = new FactorizedJetCorrector(vPar);
-        vPar.clear();
-        for ( std::vector<std::string>::const_iterator payloadBegin = offsetCorrLabel_.begin(), payloadEnd = offsetCorrLabel_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-                JetCorrectorParameters pars(*ipayload);
-                vPar.push_back(pars);
-        }
-        jecOffset_ = new FactorizedJetCorrector(vPar);
-        vPar.clear();
+	for ( std::vector<std::string>::const_iterator payloadBegin = jecAK4chsLabels_.begin(), payloadEnd = jecAK4chsLabels_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
+		JetCorrectorParameters pars(*ipayload);
+		vPar.push_back(pars);
+	}
+	jecAK4_ = new FactorizedJetCorrector(vPar);
+	vPar.clear();
+	for ( std::vector<std::string>::const_iterator payloadBegin = offsetCorrLabel_.begin(), payloadEnd = offsetCorrLabel_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
+		JetCorrectorParameters pars(*ipayload);
+		vPar.push_back(pars);
+	}
+	jecOffset_ = new FactorizedJetCorrector(vPar);
+	vPar.clear();
 	bool isMC = (!iEvent.isRealData());
 
 	double jetCorrEtaMax           = 9.9;
@@ -251,15 +251,15 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		// JEC uncertainty
 
 		reco::Candidate::LorentzVector smearedP4_JEC_up =jetCorrFactor*rawJetP4;
-                reco::Candidate::LorentzVector smearedP4_JEC_down =jetCorrFactor*rawJetP4;
+		reco::Candidate::LorentzVector smearedP4_JEC_down =jetCorrFactor*rawJetP4;
 
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
 		jecUnc.setJetEta(jet.eta());
 		double jecUncertainty_up = jecUnc.getUncertainty(true);//true = UP, false = DOWN //Meng Lu
 
 		jetParam.setJetPt(jetCorrFactor*(1+jecUncertainty_up)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
-                float PtResolution_JEC_up = resolution.getResolution(jetParam);
-                float JERSF_JEC_up        = res_sf.getScaleFactor(jetParam);
+		float PtResolution_JEC_up = resolution.getResolution(jetParam);
+		float JERSF_JEC_up        = res_sf.getScaleFactor(jetParam);
 		smearedP4_JEC_up *= get_JER_corr(JERSF_JEC_up, isMC, jet, coneSize_, PtResolution_JEC_up, jetCorrFactor*(1+jecUncertainty_up));
 
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
@@ -267,8 +267,8 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		double jecUncertainty_down = jecUnc.getUncertainty(false);//true = UP, false = DOWN //Meng Lu
 
 		jetParam.setJetPt(jetCorrFactor*(1-jecUncertainty_down)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
-                float PtResolution_JEC_down = resolution.getResolution(jetParam);
-                float JERSF_JEC_down        = res_sf.getScaleFactor(jetParam);
+		float PtResolution_JEC_down = resolution.getResolution(jetParam);
+		float JERSF_JEC_down        = res_sf.getScaleFactor(jetParam);
 		smearedP4_JEC_down *= get_JER_corr(JERSF_JEC_down, isMC, jet, coneSize_, PtResolution_JEC_down, jetCorrFactor*(1-jecUncertainty_down));
 
 		// JEC l1 uncertainty
@@ -353,7 +353,7 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		smearedP4 *= get_JER_corr(JERSF, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
 		smearedP4_JER_up *= get_JER_corr(JERSFUp_JER, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
 		smearedP4_JER_down *= get_JER_corr(JERSFDown_JER, isMC, jet, coneSize_, PtResolution_JER, jetCorrFactor);
-			
+
 
 		corrEx_MET_JER -= (smearedP4.px() - smearedP4_raw.px());
 		corrEx_MET_JER_up -= (smearedP4_JER_up.px() - smearedP4_up_raw.px());
@@ -384,9 +384,9 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jet.addUserFloat("SmearedPt_JER_down",    smearedP4_JER_down.pt());
 		jet.addUserFloat("SmearedE_JER_down",     smearedP4_JER_down.energy());
 		jet.addUserFloat("SmearedPt_JEC_up",    smearedP4_JEC_up.pt());
-                jet.addUserFloat("SmearedE_JEC_up",     smearedP4_JEC_up.energy());
-                jet.addUserFloat("SmearedPt_JEC_down",    smearedP4_JEC_down.pt());
-                jet.addUserFloat("SmearedE_JEC_down",     smearedP4_JEC_down.energy());
+		jet.addUserFloat("SmearedE_JEC_up",     smearedP4_JEC_up.energy());
+		jet.addUserFloat("SmearedPt_JEC_down",    smearedP4_JEC_down.pt());
+		jet.addUserFloat("SmearedE_JEC_down",     smearedP4_JEC_down.energy());
 
 		jet.addUserFloat("corrEx_MET_JEC",     corrEx_MET_JEC);
 		jet.addUserFloat("corrEy_MET_JEC",     corrEy_MET_JEC);
@@ -458,11 +458,11 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 	iEvent.put( jetColl );
 	delete jecAK4_;
-        jecAK4_=0;
-        delete jecOffset_;
-        jecOffset_=0;
-        delete skipMuonSelection_;
-        skipMuonSelection_=0;
+	jecAK4_=0;
+	delete jecOffset_;
+	jecOffset_=0;
+	delete skipMuonSelection_;
+	skipMuonSelection_=0;
 
 }
 
