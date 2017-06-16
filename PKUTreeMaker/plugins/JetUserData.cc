@@ -103,8 +103,8 @@ class JetUserData : public edm::EDProducer {
 		std::vector<std::string> jetCorrLabel_;
 		std::vector<std::string> jecAK4chsLabels_;
 		std::vector<std::string> offsetCorrLabel_;
-		edm::EDGetTokenT<reco::VertexCollection> VertexToken_;
 		std::string jecUncFile_;
+		edm::EDGetTokenT<reco::VertexCollection> VertexToken_;
 		//////// Meng 2017/5/8
 };
 
