@@ -84,6 +84,7 @@ class JetUserData : public edm::EDProducer {
 		std::string jetCorrLabel;
 		std::string jerLabel_;
 		std::string resolutionsFile_;
+		std::string jecUncFile_;
 		std::string scaleFactorsFile_;
 		EDGetTokenT< edm::TriggerResults > triggerResultsLabel_;
 		EDGetTokenT< trigger::TriggerEvent > triggerSummaryLabel_;
@@ -121,6 +122,7 @@ JetUserData::JetUserData(const edm::ParameterSet& iConfig) :
 	hlt2reco_deltaRmax_ (iConfig.getParameter<double>("hlt2reco_deltaRmax")),
 	candSVTagInfos_         (iConfig.getParameter<std::string>("candSVTagInfos")),
 	jecAK4chsLabels_    (iConfig.getParameter<std::vector<std::string>>("jecAK4chsPayloadNames_jetUserdata")),
+	jecUncFile_	(iConfig.getParameter<std::string>("jecUncFile")),
 	VertexToken_ (consumes<reco::VertexCollection> (iConfig.getParameter<edm::InputTag>( "vertex_jetUserdata" )))
 {
 	if (getJERFromTxt_) {
@@ -189,10 +191,11 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 	auto_ptr<vector<pat::Jet> > jetColl( new vector<pat::Jet> (*jetHandle) );
 
 	// JEC Uncertainty
-	edm::ESHandle<JetCorrectorParametersCollection> JetCorrParColl;
+	/*edm::ESHandle<JetCorrectorParametersCollection> JetCorrParColl;
 	iSetup.get<JetCorrectionsRecord>().get(jetCorrLabel, JetCorrParColl); 
 	JetCorrectorParameters const & JetCorrPar = (*JetCorrParColl)["Uncertainty"];
-	JetCorrectionUncertainty jecUnc(JetCorrPar);
+	JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorrPar);*/
+	JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(jecUncFile_);
 
 	// JER
 	// Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyResolution#Scale_factors
@@ -253,18 +256,18 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		reco::Candidate::LorentzVector smearedP4_JEC_up =jetCorrFactor*rawJetP4;
 		reco::Candidate::LorentzVector smearedP4_JEC_down =jetCorrFactor*rawJetP4;
 
-		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
-		jecUnc.setJetEta(jet.eta());
-		double jecUncertainty_up = jecUnc.getUncertainty(true);//true = UP, false = DOWN //Meng Lu
+		jecUnc->setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
+		jecUnc->setJetEta(jet.eta());
+		double jecUncertainty_up = jecUnc->getUncertainty(true);//true = UP, false = DOWN //Meng Lu
 
 		jetParam.setJetPt(jetCorrFactor*(1+jecUncertainty_up)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
 		float PtResolution_JEC_up = resolution.getResolution(jetParam);
 		float JERSF_JEC_up        = res_sf.getScaleFactor(jetParam);
 		smearedP4_JEC_up *= get_JER_corr(JERSF_JEC_up, isMC, jet, coneSize_, PtResolution_JEC_up, jetCorrFactor*(1+jecUncertainty_up));
 
-		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
-		jecUnc.setJetEta(jet.eta());
-		double jecUncertainty_down = jecUnc.getUncertainty(false);//true = UP, false = DOWN //Meng Lu
+		jecUnc->setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
+		jecUnc->setJetEta(jet.eta());
+		double jecUncertainty_down = jecUnc->getUncertainty(false);//true = UP, false = DOWN //Meng Lu
 
 		jetParam.setJetPt(jetCorrFactor*(1-jecUncertainty_down)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
 		float PtResolution_JEC_down = resolution.getResolution(jetParam);
@@ -272,13 +275,13 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		smearedP4_JEC_down *= get_JER_corr(JERSF_JEC_down, isMC, jet, coneSize_, PtResolution_JEC_down, jetCorrFactor*(1-jecUncertainty_down));
 
 		// JEC l1 uncertainty
-		jecUnc.setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
-		jecUnc.setJetEta(jet.eta());
-		double jecUncertainty_l1_up = jecUnc.getUncertainty(true);//true = UP, false = DOWN //Meng Lu
+		jecUnc->setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
+		jecUnc->setJetEta(jet.eta());
+		double jecUncertainty_l1_up = jecUnc->getUncertainty(true);//true = UP, false = DOWN //Meng Lu
 
-		jecUnc.setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
-		jecUnc.setJetEta(jet.eta());
-		double jecUncertainty_l1_down = jecUnc.getUncertainty(false);//true = UP, false = DOWN //Meng Lu
+		jecUnc->setJetPt (jetCorrFactor_l1*rawJetP4.pt());// here you must use the CORRECTED jet pt
+		jecUnc->setJetEta(jet.eta());
+		double jecUncertainty_l1_down = jecUnc->getUncertainty(false);//true = UP, false = DOWN //Meng Lu
 
 		//-----------------------for MET
 		double emEnergyFraction = jet.chargedEmEnergyFraction() + jet.neutralEmEnergyFraction();
