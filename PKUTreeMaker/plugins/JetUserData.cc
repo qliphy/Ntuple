@@ -103,7 +103,6 @@ class JetUserData : public edm::EDProducer {
 		std::vector<std::string> jetCorrLabel_;
 		std::vector<std::string> jecAK4chsLabels_;
 		std::vector<std::string> offsetCorrLabel_;
-		std::string jecUncFile_;
 		edm::EDGetTokenT<reco::VertexCollection> VertexToken_;
 		//////// Meng 2017/5/8
 };
@@ -122,7 +121,6 @@ JetUserData::JetUserData(const edm::ParameterSet& iConfig) :
 	hlt2reco_deltaRmax_ (iConfig.getParameter<double>("hlt2reco_deltaRmax")),
 	candSVTagInfos_         (iConfig.getParameter<std::string>("candSVTagInfos")),
 	jecAK4chsLabels_    (iConfig.getParameter<std::vector<std::string>>("jecAK4chsPayloadNames_jetUserdata")),
-	jecUncFile_	(iConfig.getParameter<std::string>("jecUncFile")),
 	VertexToken_ (consumes<reco::VertexCollection> (iConfig.getParameter<edm::InputTag>( "vertex_jetUserdata" )))
 {
 	if (getJERFromTxt_) {
@@ -191,11 +189,10 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 	auto_ptr<vector<pat::Jet> > jetColl( new vector<pat::Jet> (*jetHandle) );
 
 	// JEC Uncertainty
-	/*edm::ESHandle<JetCorrectorParametersCollection> JetCorrParColl;
+	edm::ESHandle<JetCorrectorParametersCollection> JetCorrParColl;
 	iSetup.get<JetCorrectionsRecord>().get(jetCorrLabel, JetCorrParColl); 
 	JetCorrectorParameters const & JetCorrPar = (*JetCorrParColl)["Uncertainty"];
-	JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorrPar);*/
-	JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(jecUncFile_);
+	JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorrPar);
 
 	// JER
 	// Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyResolution#Scale_factors
