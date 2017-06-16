@@ -84,7 +84,6 @@ class JetUserData : public edm::EDProducer {
 		std::string jetCorrLabel;
 		std::string jerLabel_;
 		std::string resolutionsFile_;
-		std::string jecUncFile_;
 		std::string scaleFactorsFile_;
 		EDGetTokenT< edm::TriggerResults > triggerResultsLabel_;
 		EDGetTokenT< trigger::TriggerEvent > triggerSummaryLabel_;
@@ -105,6 +104,7 @@ class JetUserData : public edm::EDProducer {
 		std::vector<std::string> jecAK4chsLabels_;
 		std::vector<std::string> offsetCorrLabel_;
 		edm::EDGetTokenT<reco::VertexCollection> VertexToken_;
+		std::string jecUncFile_;
 		//////// Meng 2017/5/8
 };
 
