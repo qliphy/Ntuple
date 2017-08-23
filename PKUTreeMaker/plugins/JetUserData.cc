@@ -266,7 +266,7 @@ void JetUserData::produce( edm::Event& iEvent, const edm::EventSetup& iSetup) {
 		jecUnc.setJetPt (jetCorrFactor*rawJetP4.pt());// here you must use the CORRECTED jet pt
 		jecUnc.setJetEta(jet.eta());
 		double jecUncertainty_down = jecUnc.getUncertainty(false);//true = UP, false = DOWN //Meng Lu
-		smearedP4_JEC_down *= (1-jecUncertainty_down);
+		smearedP4_JEC_down *= (1+jecUncertainty_down);
 
 		jetParam.setJetPt(jetCorrFactor*(1-jecUncertainty_down)*rawJetP4.pt()).setJetEta(jet.eta()).setRho(*rho);
 		float PtResolution_JEC_down = resolution.getResolution(jetParam);
