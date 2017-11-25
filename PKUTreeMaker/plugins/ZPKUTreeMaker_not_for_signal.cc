@@ -173,6 +173,7 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double Mla_f, Mla2_f, Mva_f;
 		double ptlep1, etalep1, philep1;
 		double ptlep2, etalep2, philep2;
+		// before rochester correction, we have done the bug fix on muon id, but this will have a quite small effect on ele channel as we use "nloosemus" which would be changed by the bug fix. for example, the entries of outDEle.root that meet ""HLT_Ele2 >0 &&lep == 11 && ptlep1 > 25. && ptlep2 > 25. && abs(etalep1) < 2.5 && abs(etalep2) < 2.5 && nlooseeles < 3 && massVlep > 70. && massVlep < 110."" is 10187370, same before and after the bug fix, but when "nloosemus" was added in, the entries are 10183002 and 10185094 before and after the bugfix, respectively.
 		// for muon rochester correction
 		int muon1_trackerLayers;
                 double matchedgenMu1_pt;
