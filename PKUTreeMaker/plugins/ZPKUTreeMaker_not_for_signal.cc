@@ -91,7 +91,7 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		virtual void beginRun(const edm::Run&, const edm::EventSetup&) override;
 		virtual void endRun(const edm::Run&, const edm::EventSetup&) override;
 		virtual void addTypeICorr( edm::Event const & event );
-		virtual void addTypeICorr_user( edm::Event const & event );//---for MET, Meng
+//		virtual void addTypeICorr_user( edm::Event const & event );//---for MET, Meng
 		virtual double getJEC( reco::Candidate::LorentzVector& rawJetP4, const pat::Jet& jet, double& jetCorrEtaMax, std::vector<std::string> jecPayloadNames_ );
 		virtual double getJECOffset( reco::Candidate::LorentzVector& rawJetP4, const pat::Jet& jet, double& jetCorrEtaMax, std::vector<std::string> jecPayloadNames_ );
 		math::XYZTLorentzVector getNeutrinoP4(double& MetPt, double& MetPhi, TLorentzVector& lep, int lepType);
@@ -173,13 +173,12 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double Mla_f, Mla2_f, Mva_f;
 		double ptlep1, etalep1, philep1;
 		double ptlep2, etalep2, philep2;
-		// before rochester correction, we have done the bug fix on muon id, but this will have a quite small effect on ele channel as we use "nloosemus" which would be changed by the bug fix. for example, the entries of outDEle.root that meet ""HLT_Ele2 >0 &&lep == 11 && ptlep1 > 25. && ptlep2 > 25. && abs(etalep1) < 2.5 && abs(etalep2) < 2.5 && nlooseeles < 3 && massVlep > 70. && massVlep < 110."" is 10187370, same before and after the bug fix, but when "nloosemus" was added in, the entries are 10183002 and 10185094 before and after the bugfix, respectively.
 		// for muon rochester correction
 		int muon1_trackerLayers;
-                double matchedgenMu1_pt;
-                int muon2_trackerLayers;
-                double matchedgenMu2_pt;
-                double getDR(double eta1, double phi1, double eta2, double phi2);
+		double matchedgenMu1_pt;
+		int muon2_trackerLayers;
+		double matchedgenMu2_pt;
+		double getDR(double eta1, double phi1, double eta2, double phi2);
 		// for muon rochester correction
 		int  lep, nlooseeles,nloosemus, ngoodmus;
 		double met, metPhi, j1metPhi, j2metPhi;
@@ -187,21 +186,9 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		//Met JEC
 		double METraw_et, METraw_phi, METraw_sumEt;
 		double genMET, MET_et, MET_phi, MET_sumEt, MET_corrPx, MET_corrPy;
-		double MET_et_wo_JER, MET_phi_wo_JER, MET_sumEt_wo_JER;
-// Marked for debug
-//-------------- Met uncertainty ----------------//
-		double MET_et_JEC_up, MET_et_JEC_down,MET_et_JER_up,MET_et_JER_down;
-		double MET_phi_JEC_up, MET_phi_JEC_down,MET_phi_JER_up,MET_phi_JER_down;
-		double MET_sumEt_JEC_up, MET_sumEt_JEC_down, MET_sumEt_JER_up, MET_sumEt_JER_down;
-//-------------- Met uncertainty-----------------//
-// Marked for debug
 		double useless;
 		// AK4 Jets
 		double ak4jet_pt[6],ak4jet_eta[6],ak4jet_phi[6],ak4jet_e[6];
-/*
-		double ak4jet_pt_JEC_up[6],ak4jet_pt_JEC_down[6],ak4jet_e_JEC_up[6],ak4jet_e_JEC_down[6];
-		double ak4jet_pt_JER_up[6],ak4jet_pt_JER_down[6],ak4jet_e_JER_up[6],ak4jet_e_JER_down[6];
-*/
 		double ak4jet_pt_jer[6];
 		double ak4jet_csv[6],ak4jet_icsv[6];
 		double drjetlep[6], drjetphoton[6];
@@ -236,8 +223,8 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		double jet2pt_f, jet2eta_f, jet2phi_f, jet2e_f, jet2csv_f, jet2icsv_f;
 		double drj1a, drj2a, drj1l, drj2l, drj1l2,drj2l2;
 		double drj1a_f, drj2a_f, drj1l_f, drj2l_f, drj1l2_f, drj2l2_f;
-		double Mjj, deltaeta, zepp;
-		double Mjj_f, deltaeta_f, zepp_f; 
+		double Mjj, deltaetajj, zepp;
+		double Mjj_f, deltaetajj_f, zepp_f; 
 
 		void setDummyValues();
 
@@ -253,7 +240,6 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		FactorizedJetCorrector* jecAK4_;
 		std::string gravitonSrc_;
 		std::map<std::string,double>  TypeICorrMap_;
-		std::map<std::string,double>  TypeICorrMap_user_;
 		edm::InputTag mets_;
 		//High Level Trigger
 		HLTConfigProvider hltConfig;
@@ -295,7 +281,6 @@ class ZPKUTreeMaker : public edm::EDAnalyzer {
 		edm::EDGetTokenT<edm::View<reco::Candidate>> metSrc_;
 		edm::EDGetTokenT<reco::VertexCollection> VertexToken_;
 		edm::EDGetTokenT<pat::JetCollection> t1jetSrc_;
-		edm::EDGetTokenT<pat::JetCollection> t1jetSrc_user_;
 		edm::EDGetTokenT<edm::View<pat::Muon>> t1muSrc_;
 
 };
@@ -373,7 +358,6 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	metSrc_      = consumes<edm::View<reco::Candidate>>(iConfig.getParameter<edm::InputTag>( "metSrc") ) ;
 	VertexToken_ =consumes<reco::VertexCollection> (iConfig.getParameter<edm::InputTag>( "vertex" ) ) ;
 	t1jetSrc_      = consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>( "t1jetSrc") ) ;
-	t1jetSrc_user_      = consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>( "t1jetSrc_user") ) ;
 	t1muSrc_      = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>( "t1muSrc") ) ;
 	originalNEvents_ = iConfig.getParameter<int>("originalNEvents");
 	crossSectionPb_  = iConfig.getParameter<double>("crossSectionPb");
@@ -555,8 +539,8 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("drj2l2_f"          ,&drj2l2_f         ,"drj2l2_f/D"         );
 	outTree_->Branch("Mjj"          ,&Mjj         ,"Mjj/D"         );
 	outTree_->Branch("Mjj_f"          ,&Mjj_f         ,"Mjj_f/D"         );
-	outTree_->Branch("deltaeta"          ,&deltaeta         ,"deltaeta/D"         );
-	outTree_->Branch("deltaeta_f"          ,&deltaeta_f         ,"deltaeta_f/D"         );
+	outTree_->Branch("deltaetajj"          ,&deltaetajj         ,"deltaetajj/D"         );
+	outTree_->Branch("deltaetajj_f"          ,&deltaetajj_f         ,"deltaetajj_f/D"         );
 	outTree_->Branch("zepp"          ,&zepp         ,"zepp/D"         );
 	outTree_->Branch("zepp_f"          ,&zepp_f         ,"zepp_f/D"         );
 	outTree_->Branch("ptlep1"          ,&ptlep1         ,"ptlep1/D"         );
@@ -567,33 +551,17 @@ ZPKUTreeMaker::ZPKUTreeMaker(const edm::ParameterSet& iConfig)//:
 	outTree_->Branch("philep2"         ,&philep2        ,"philep2/D"        );
 	//for muon rochester correction
 	outTree_->Branch("muon1_trackerLayers"          ,&muon1_trackerLayers         ,"muon1_trackerLayers/I"         );
-        outTree_->Branch("matchedgenMu1_pt"          ,&matchedgenMu1_pt         ,"matchedgenMu1_pt/D"         );
-        outTree_->Branch("muon2_trackerLayers"          ,&muon2_trackerLayers         ,"muon2_trackerLayers/I"         );
-        outTree_->Branch("matchedgenMu2_pt"          ,&matchedgenMu2_pt         ,"matchedgenMu2_pt/D"         );
+	outTree_->Branch("matchedgenMu1_pt"          ,&matchedgenMu1_pt         ,"matchedgenMu1_pt/D"         );
+	outTree_->Branch("muon2_trackerLayers"          ,&muon2_trackerLayers         ,"muon2_trackerLayers/I"         );
+	outTree_->Branch("matchedgenMu2_pt"          ,&matchedgenMu2_pt         ,"matchedgenMu2_pt/D"         );
 	//for muon rochester correction
 	outTree_->Branch("j1metPhi"          ,&j1metPhi         ,"j1metPhi/D"         );
 	outTree_->Branch("j1metPhi_f"          ,&j1metPhi_f         ,"j1metPhi_f/D"         );
 	outTree_->Branch("j2metPhi"          ,&j2metPhi         ,"j2metPhi/D"         );
 	outTree_->Branch("j2metPhi_f"          ,&j2metPhi_f         ,"j2metPhi_f/D"         );
+	// MET
 	outTree_->Branch("MET_et",&MET_et,"MET_et/D");
-	outTree_->Branch("MET_et_wo_JER",&MET_et_wo_JER,"MET_et_wo_JER/D");
-	outTree_->Branch("MET_phi_wo_JER",&MET_phi_wo_JER,"MET_phi_wo_JER/D");
-// Marked for debug
-	outTree_->Branch("MET_et_JEC_up",&MET_et_JEC_up,"MET_et_JEC_up/D");
-	outTree_->Branch("MET_et_JEC_down",&MET_et_JEC_down,"MET_et_JEC_down/D");
-	outTree_->Branch("MET_et_JER_up",&MET_et_JER_up,"MET_et_JER_up/D");
-	outTree_->Branch("MET_et_JER_down",&MET_et_JER_down,"MET_et_JER_down/D");
-// Marked for debug
 	outTree_->Branch("MET_phi",&MET_phi,"MET_phi/D");
-// Marked for debug
-	outTree_->Branch("MET_phi_JEC_up",&MET_phi_JEC_up,"MET_phi_JEC_up/D");
-	outTree_->Branch("MET_phi_JEC_down",&MET_phi_JEC_down,"MET_phi_JEC_down/D");
-	outTree_->Branch("MET_phi_JER_up",&MET_phi_JER_up,"MET_phi_JER_up/D");
-	outTree_->Branch("MET_phi_JER_down",&MET_phi_JER_down,"MET_phi_JER_down/D");
-// Marked for debug
-	//outTree_->Branch("MET_sumEt",&MET_sumEt,"MET_sumEt/D");
-	//outTree_->Branch("MET_corrPx",&MET_corrPx,"MET_corrPx/D");
-	//outTree_->Branch("MET_corrPy",&MET_corrPy,"MET_corrPy/D");
 	//HLT bits
 	outTree_->Branch("HLT_Ele1"  ,&HLT_Ele1 ,"HLT_Ele1/I" );
 	outTree_->Branch("HLT_Ele2"  ,&HLT_Ele2 ,"HLT_Ele2/I" );
@@ -749,71 +717,6 @@ void ZPKUTreeMaker::addTypeICorr( edm::Event const & event ){
 	delete skipMuonSelection_;
 	skipMuonSelection_=0;
 }
-
-void ZPKUTreeMaker::addTypeICorr_user( edm::Event const & event ){
-	TypeICorrMap_user_.clear();
-	edm::Handle<pat::JetCollection> jets_;
-	event.getByToken(t1jetSrc_user_, jets_);
-	double corrEx_JEC    = 0;
-        double corrEy_JEC    = 0;
-        double corrSumEt_JEC = 0;
-        double corrEx_JEC_up    = 0;
-        double corrEy_JEC_up    = 0;
-        double corrSumEt_JEC_up = 0;
-        double corrEx_JEC_down    = 0;
-        double corrEy_JEC_down    = 0;
-        double corrSumEt_JEC_down = 0;
-        
-        double corrEx_JER    = 0;
-        double corrEy_JER    = 0;
-        double corrSumEt_JER = 0;
-        double corrEx_JER_up    = 0;
-        double corrEy_JER_up    = 0;
-        double corrSumEt_JER_up = 0;
-        double corrEx_JER_down    = 0;
-        double corrEy_JER_down    = 0;
-        double corrSumEt_JER_down = 0;
-        for (const pat::Jet &jet : *jets_) {
-                corrEx_JEC += jet.userFloat("corrEx_MET_JEC");
-                corrEy_JEC += jet.userFloat("corrEy_MET_JEC");
-                corrSumEt_JEC += jet.userFloat("corrSumEt_MET_JEC");
-                corrEx_JEC_up += jet.userFloat("corrEx_MET_JEC_up");
-                corrEy_JEC_up += jet.userFloat("corrEy_MET_JEC_up");
-                corrSumEt_JEC_up += jet.userFloat("corrSumEt_MET_JEC_up");
-                corrEx_JEC_down += jet.userFloat("corrEx_MET_JEC_down");
-                corrEy_JEC_down += jet.userFloat("corrEy_MET_JEC_down");
-                corrSumEt_JEC_down += jet.userFloat("corrSumEt_MET_JEC_down");
-		                corrEx_JER += jet.userFloat("corrEx_MET_JER");
-                corrEy_JER += jet.userFloat("corrEy_MET_JER");
-                corrSumEt_JER += jet.userFloat("corrSumEt_MET_JER");
-                corrEx_JER_up += jet.userFloat("corrEx_MET_JER_up");
-                corrEy_JER_up += jet.userFloat("corrEy_MET_JER_up");
-                corrSumEt_JER_up += jet.userFloat("corrSumEt_MET_JER_up");
-                corrEx_JER_down += jet.userFloat("corrEx_MET_JER_down");
-                corrEy_JER_down += jet.userFloat("corrEy_MET_JER_down");
-                corrSumEt_JER_down += jet.userFloat("corrSumEt_MET_JER_down");
-        }               
-        TypeICorrMap_user_["corrEx_JEC"]    = corrEx_JEC;
-        TypeICorrMap_user_["corrEy_JEC"]    = corrEy_JEC;
-        TypeICorrMap_user_["corrSumEt_JEC"] = corrSumEt_JEC;
-        TypeICorrMap_user_["corrEx_JEC_up"]    = corrEx_JEC_up;
-        TypeICorrMap_user_["corrEy_JEC_up"]    = corrEy_JEC_up;
-        TypeICorrMap_user_["corrSumEt_JEC_up"] = corrSumEt_JEC_up;
-        TypeICorrMap_user_["corrEx_JEC_down"]    = corrEx_JEC_down;
-        TypeICorrMap_user_["corrEy_JEC_down"]    = corrEy_JEC_down;
-        TypeICorrMap_user_["corrSumEt_JEC_down"] = corrSumEt_JEC_down;
-        
-        TypeICorrMap_user_["corrEx_JER"]    = corrEx_JER;
-        TypeICorrMap_user_["corrEy_JER"]    = corrEy_JER;
-        TypeICorrMap_user_["corrSumEt_JER"] = corrSumEt_JER;
-        TypeICorrMap_user_["corrEx_JER_up"]    = corrEx_JER_up;
-        TypeICorrMap_user_["corrEy_JER_up"]    = corrEy_JER_up;
-        TypeICorrMap_user_["corrSumEt_JER_up"] = corrSumEt_JER_up;
-        TypeICorrMap_user_["corrEx_JER_down"]    = corrEx_JER_down;
-	TypeICorrMap_user_["corrEy_JER_down"]    = corrEy_JER_down;
-        TypeICorrMap_user_["corrSumEt_JER_down"] = corrSumEt_JER_down;
-}
-
 //------------------------------------
 bool ZPKUTreeMaker::hasMatchedPromptElectron(const reco::SuperClusterRef &sc, const edm::Handle<edm::View<pat::Electron> > &eleCol, const edm::Handle<reco::ConversionCollection> &convCol, const math::XYZPoint &beamspot,  float lxyMin, float probMin, unsigned int nHitsBeforeVtxMax) {
 	//check if a given SuperCluster matches to at least one GsfElectron having zero expected inner hits
@@ -1120,7 +1023,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	if(defaultMET){
 		addTypeICorr(iEvent);
-		addTypeICorr_user(iEvent);
+//		addTypeICorr_user(iEvent);
 		for (const pat::MET &met : *METs_) {
 			//         const float  rawPt    = met.shiftedPt(pat::MET::METUncertainty::NoShift, pat::MET::METUncertaintyLevel::Raw);
 			//         const float  rawPhi   = met.shiftedPhi(pat::MET::METUncertainty::NoShift, pat::MET::METUncertaintyLevel::Raw);
@@ -1136,48 +1039,12 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			METraw_et = rawEt;
 			METraw_phi = rawPhi;
 			METraw_sumEt = rawSumEt;
-		
-			
 
-
-			double pxcorr_wo_JER = rawPx+TypeICorrMap_["corrEx"];
-			double pycorr_wo_JER = rawPy+TypeICorrMap_["corrEy"];
-			double et_wo_JER     = std::hypot(pxcorr_wo_JER,pycorr_wo_JER);
-			double sumEtcorr_wo_JER = rawSumEt+TypeICorrMap_["corrSumEt"];
-
-
-// Marked for debug
-//------------------central value, correction from JetuserData---------------------
-			double pxcorr = rawPx+TypeICorrMap_user_["corrEx_JEC"]+TypeICorrMap_user_["corrEx_JER"];
-                        double pycorr = rawPy+TypeICorrMap_user_["corrEy_JEC"]+TypeICorrMap_user_["corrEy_JER"];
-                        double et     = std::hypot(pxcorr,pycorr);
-                        double sumEtcorr = rawSumEt+TypeICorrMap_user_["corrSumEt_JEC"]+TypeICorrMap_user_["corrSumEt_JER"];
-			//----for JEC uncertainty study
-			double pxcorr_JEC_up = rawPx+TypeICorrMap_user_["corrEx_JEC_up"]+TypeICorrMap_user_["corrEx_JER"];
-                        double pycorr_JEC_up = rawPy+TypeICorrMap_user_["corrEy_JEC_up"]+TypeICorrMap_user_["corrEy_JER"];
-                        double et_JEC_up     = std::hypot(pxcorr_JEC_up, pycorr_JEC_up);
-                        double sumEtcorr_JEC_up = rawSumEt+TypeICorrMap_user_["corrSumEt_JEC_up"]+TypeICorrMap_user_["corrSumEt_JER"];
-			double pxcorr_JEC_down = rawPx+TypeICorrMap_user_["corrEx_JEC_down"]+TypeICorrMap_user_["corrEx_JER"];
-                        double pycorr_JEC_down = rawPy+TypeICorrMap_user_["corrEy_JEC_down"]+TypeICorrMap_user_["corrEy_JER"];
-                        double et_JEC_down     = std::hypot(pxcorr_JEC_down, pycorr_JEC_down);
-                        double sumEtcorr_JEC_down = rawSumEt+TypeICorrMap_user_["corrSumEt_JEC_down"]+TypeICorrMap_user_["corrSumEt_JER"];
-			//----for JER uncertainty study
-			double pxcorr_JER_up = rawPx+TypeICorrMap_user_["corrEx_JEC"]+TypeICorrMap_user_["corrEx_JER_up"];
-                        double pycorr_JER_up = rawPy+TypeICorrMap_user_["corrEy_JEC"]+TypeICorrMap_user_["corrEy_JER_up"];
-                        double et_JER_up     = std::hypot(pxcorr_JER_up, pycorr_JER_up);
-                        double sumEtcorr_JER_up = rawSumEt+TypeICorrMap_user_["corrSumEt__JEC"]+TypeICorrMap_user_["corrSumEt_JER_up"];
-			double pxcorr_JER_down = rawPx+TypeICorrMap_user_["corrEx_JEC"]+TypeICorrMap_user_["corrEx_JER_down"];
-                        double pycorr_JER_down = rawPy+TypeICorrMap_user_["corrEy_JEC"]+TypeICorrMap_user_["corrEy_JER_down"];
-                        double et_JER_down     = std::hypot(pxcorr_JER_down,pycorr_JER_down);
-                        double sumEtcorr_JER_down = rawSumEt+TypeICorrMap_user_["corrSumEt_JEC"]+TypeICorrMap_user_["corrSumEt_JER_JER_down"];
-//------------------ correction from JetuserData---------------------
-// Marked for debug
+			double pxcorr = rawPx+TypeICorrMap_["corrEx"];
+			double pycorr = rawPy+TypeICorrMap_["corrEy"];
+			double et     = std::hypot(pxcorr,pycorr);
+			double sumEtcorr = rawSumEt+TypeICorrMap_["corrSumEt"];
 			TLorentzVector corrmet;
-			
-			corrmet.SetPxPyPzE(pxcorr_wo_JER,pycorr_wo_JER,0.,et_wo_JER);
-			MET_et_wo_JER = et_wo_JER;
-			MET_phi_wo_JER = corrmet.Phi();
-			MET_sumEt_wo_JER = sumEtcorr_wo_JER;
 			corrmet.SetPxPyPzE(pxcorr,pycorr,0.,et);
 			useless = sumEtcorr;
 			useless = rawEt;
@@ -1186,26 +1053,6 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         MET_sumEt = sumEtcorr;
                         MET_corrPx = TypeICorrMap_["corrEx"];
                         MET_corrPy = TypeICorrMap_["corrEy"];
-// Marked for debug
-			MET_et_JEC_up = et_JEC_up;
-			MET_et_JEC_down = et_JEC_down;
-			MET_et_JER_up = et_JER_up;
-                        MET_et_JER_down = et_JER_down;
-			
-			corrmet.SetPxPyPzE(pxcorr_JEC_up,pycorr_JEC_up,0.,et_JEC_up);
-			MET_phi_JEC_up = corrmet.Phi();
-			corrmet.SetPxPyPzE(pxcorr_JEC_down,pycorr_JEC_down,0.,et_JEC_down);
-                        MET_phi_JEC_down = corrmet.Phi();
-                        corrmet.SetPxPyPzE(pxcorr_JER_up,pycorr_JER_up,0.,et_JER_up);
-                        MET_phi_JER_up = corrmet.Phi();
-                        corrmet.SetPxPyPzE(pxcorr_JER_down,pycorr_JER_down,0.,et_JER_down);
-                        MET_phi_JER_down = corrmet.Phi();
-
-			MET_sumEt_JEC_up = sumEtcorr_JEC_up;
-			MET_sumEt_JEC_down = sumEtcorr_JEC_down;
-			MET_sumEt_JER_up = sumEtcorr_JER_up;
-			MET_sumEt_JER_down = sumEtcorr_JER_down;
-// Marked for debug
 		}
 	}
 	//------------------------------------
@@ -1232,31 +1079,33 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	// Lu
 	ptlep1       = leptonicV.daughter(0)->pt();
+//	std::cout<<"ptlep1 "<<ptlep1<<" goodmuon lep1 "<<(*goodmus)[0].p4().pt()<<std::endl;
 	etalep1      = leptonicV.daughter(0)->eta();
 	philep1      = leptonicV.daughter(0)->phi(); 
 	ptlep2       = leptonicV.daughter(1)->pt();
+//	std::cout<<"ptlep2 "<<ptlep2<<" goodmuon lep2 "<<(*goodmus)[1].p4().pt()<<std::endl;
 	etalep2      = leptonicV.daughter(1)->eta();
 	philep2      = leptonicV.daughter(1)->phi();
 	// for muon rochester correction
 	if(goodmus->size()>1){
-                muon1_trackerLayers      = (*goodmus)[0].innerTrack()->hitPattern().trackerLayersWithMeasurement();
-                muon2_trackerLayers      = (*goodmus)[1].innerTrack()->hitPattern().trackerLayersWithMeasurement();
-        }
-        if(lep==13)
-        {
-                double dr_temp=1e2;
-                double matchmuon_pt = -1e2;
-                for (int i=0;i<6;i++)
-                {
-                        if(lep1_sign==genmuon_pid[i])
-                        {
-                                double dr_mugenmu=getDR(etalep1,philep1,genmuon_eta[i],genmuon_phi[i]);
-                                if(dr_mugenmu<dr_temp) {matchmuon_pt=genmuon_pt[i];dr_temp=dr_mugenmu;}
-                        }
-                }
-                if(dr_temp<0.3) matchedgenMu1_pt=matchmuon_pt;
-        }
-	
+		muon1_trackerLayers      = (*goodmus)[0].innerTrack()->hitPattern().trackerLayersWithMeasurement(); 
+		muon2_trackerLayers      = (*goodmus)[1].innerTrack()->hitPattern().trackerLayersWithMeasurement(); 
+	}
+	if(lep==13)
+	{	
+		double dr_temp=1e2;
+		double matchmuon_pt = -1e2;
+		for (int i=0;i<6;i++)
+		{
+			if(lep1_sign==genmuon_pid[i]) 
+			{
+				double dr_mugenmu=getDR(etalep1,philep1,genmuon_eta[i],genmuon_phi[i]);
+				if(dr_mugenmu<dr_temp) {matchmuon_pt=genmuon_pt[i];dr_temp=dr_mugenmu;}
+			}
+		}
+		if(dr_temp<0.3) matchedgenMu1_pt=matchmuon_pt;
+	}
+//	std::cout<<"matchedgenMu1_pt "<<matchedgenMu1_pt<<std::endl;
 	if(lep==13)
         {
                 double dr_temp=1e2;
@@ -1271,6 +1120,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 }
                 if(dr_temp<0.3) matchedgenMu2_pt=matchmuon_pt;
         }
+//	std::cout<<"matchedgenMu2_pt "<<matchedgenMu2_pt<<std::endl;
 	// for muon rochester correction
 	double energylep1     = leptonicV.daughter(0)->energy();
 	double energylep2     = leptonicV.daughter(1)->energy();
@@ -1301,17 +1151,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	photonet=-100.; photonet_f=-100.;  iphoton=-1; iphoton_f=-1;
 	for (size_t ip=0; ip<photons->size();ip++)
 	{
-
+		std::cout<<"nevent "<<nevent<<" final "<<photons->size()<<std::endl;
 		const auto pho = photons->ptrAt(ip);
 
 		double phosc_eta=pho->superCluster()->eta();
-		//            std::cout<<pho->superCluster()->eta()<<" "<<(*photons)[ip].eta()<<std::endl;
 		double phosc_phi=pho->superCluster()->phi();
-		double pho_ieie=(*full5x5SigmaIEtaIEtaMap)[pho];
-		//            std::cout<<(*full5x5SigmaIEtaIEtaMap)[ pho ]<<" "<<(*photons)[ip].sigmaIetaIeta()<<std::endl;
-		double chIso1 =  (*phoChargedIsolationMap)[pho];
-		double nhIso1 =  (*phoNeutralHadronIsolationMap)[pho];
-		double phIso1 = (*phoPhotonIsolationMap)[pho];
+		double pho_ieie=(*photons)[ip].sigmaIetaIeta();//(*full5x5SigmaIEtaIEtaMap)[pho];
+		double chIso1 = (*photons)[ip].chargedHadronIso();// (*phoChargedIsolationMap)[pho];
+		double nhIso1 = (*photons)[ip].neutralHadronIso();// (*phoNeutralHadronIsolationMap)[pho];
+		double phIso1 = (*photons)[ip].photonIso();//(*phoPhotonIsolationMap)[pho];
+		std::cout<<"pho_ieie "<<pho_ieie<<" chIso1 "<<chIso1<<" nhIso1 "<<nhIso1<<" phIso1 "<<phIso1<<" pt "<<(*photons)[ip].pt()<<std::endl;
 		double chiso=std::max(0.0, chIso1 - rhoVal_*EAch(fabs((*photons)[ip].eta()))); //effAreaChHadrons_.getEffectiveArea(fabs(phosc_eta)));
 		//            double chiso=std::max((*photons)[ip].chargedHadronIso()-rhoVal_*EAch(fabs((*photons)[ip].eta())),0.0);
 		double nhiso=std::max(0.0, nhIso1 - rhoVal_*EAnh(fabs((*photons)[ip].eta()))); //effAreaNeuHadrons_.getEffectiveArea(fabs(phosc_eta)));
@@ -1535,6 +1384,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		j2metPhi=fabs(jet2phi-MET_phi);
 		if(j2metPhi>Pi) {j2metPhi=2.0*Pi-j2metPhi;}
 		Mjj=(j1p4 + j2p4).M();
+		deltaetajj = fabs(jet1eta - jet2eta);
 		zepp = fabs((vp4+photonp42).Rapidity() - (j1p4.Rapidity() + j2p4.Rapidity())/ 2.0);
 	}
 
@@ -1571,12 +1421,13 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		j2metPhi_f=fabs(jet2phi_f-MET_phi);
 		if(j2metPhi_f>Pi) {j2metPhi_f=2.0*Pi-j2metPhi_f;}
 		Mjj_f=(j1p4_f + j2p4_f).M();
-		deltaeta_f = fabs(jet1eta_f - jet2eta_f);
+		deltaetajj_f = fabs(jet1eta_f - jet2eta_f);
 		zepp_f = fabs((vp4_f+photonp42_f).Rapidity() - (j1p4_f.Rapidity() + j2p4_f.Rapidity())/ 2.0);
 
 	}
 
 	outTree_->Fill();
+//	std::cout<<"fill the outTree"<<std::endl;
 	delete jecAK4_;
 	jecAK4_=0;
 }
@@ -1586,15 +1437,16 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 double ZPKUTreeMaker::getDR(double eta1, double phi1, double eta2, double phi2)
 {
-        double DR = -1e1;
-        if (fabs(phi1-phi2)>3.1415926) DR=sqrt((eta1-eta2)*(eta1-eta2)+(2*3.1415926-fabs(phi1-phi2))*(2*3.1415926-fabs(phi1-phi2)));
-        else DR=sqrt((eta1-eta2)*(eta1-eta2)+(fabs(phi1-phi2))*(fabs(phi1-phi2)));
-        return DR;
+	double DR = -1e1;
+	if (fabs(phi1-phi2)>3.1415926) DR=sqrt((eta1-eta2)*(eta1-eta2)+(2*3.1415926-fabs(phi1-phi2))*(2*3.1415926-fabs(phi1-phi2)));
+	else DR=sqrt((eta1-eta2)*(eta1-eta2)+(fabs(phi1-phi2))*(fabs(phi1-phi2)));
+	return DR;
 }
 
 
 void ZPKUTreeMaker::setDummyValues() {
 	// muon station2 retrieve, L1 issue, Meng 2017/3/26
+//	std::cout << "begin setDummyValues()..." << std::endl;
 	lep1_sign = -1e2;
 	lep2_sign = -1e2;
 	lep1_etaphi_.first = -99.;
@@ -1633,10 +1485,10 @@ void ZPKUTreeMaker::setDummyValues() {
 	philep2        = -1e1;
 	// for muon rochester correction
 	muon1_trackerLayers =-1e1;
-        muon2_trackerLayers =-1e1;
-        matchedgenMu1_pt =-1e2;
-        matchedgenMu2_pt =-1e2;
-        // for muon rochester correction
+	muon2_trackerLayers =-1e1;
+	matchedgenMu1_pt =-1e2;
+	matchedgenMu2_pt =-1e2;
+	// for muon rochester correction
 	met            = -1e1;
 	metPhi         = -1e1;
 	j1metPhi         = -1e1; j1metPhi_f         = -1e1;
@@ -1645,27 +1497,9 @@ void ZPKUTreeMaker::setDummyValues() {
 	METraw_phi = -99;
 	METraw_sumEt = -99;
 	genMET=-99;
-	MET_et_wo_JER = -99;
-        MET_phi_wo_JER  = -99;
 	MET_et = -99;
 	MET_phi = -99;
 	MET_sumEt = -99;
-// Marked for debug
-	MET_et_JEC_up = -99;
-	MET_et_JEC_down = -99;
-	MET_et_JER_up = -99;
-	MET_et_JER_down = -99;
-	MET_phi_JEC_up = -99;
-        MET_phi_JEC_down = -99;
-        MET_phi_JER_up = -99;
-        MET_phi_JER_down = -99;
-	MET_sumEt_JEC_up = -99;
-	MET_sumEt_JEC_down = -99;
-	MET_sumEt_JER_up = -99;
-	MET_sumEt_JER_down = -99;
-	MET_corrPx = -99;
-	MET_corrPy = -99;
-// Marked for debug
 	for(int j=0; j<703; j++){
 		pweight[j]=0.0;
 	}
@@ -1755,7 +1589,7 @@ void ZPKUTreeMaker::setDummyValues() {
 	drj1l2=1e1;  drj1l2_f=1e1;
 	drj2l2=1e1;  drj2l2_f=1e1;
 	Mjj=-1e1;   Mjj_f=-1e1;
-	deltaeta=-1e1;   deltaeta_f=-1e1;
+	deltaetajj=-1e1;   deltaetajj_f=-1e1;
 	zepp=-1e1;   zepp_f=-1e1;
 	
 
@@ -1782,17 +1616,20 @@ void ZPKUTreeMaker::setDummyValues() {
 	// Meng
 	passFilter_MetbadMuon_	       = false;
 	passFilter_duplicateMuon_ 	       = false;
+//	std::cout << "end setDummyValues()..." << std::endl;
 }
 
 // ------------ method called once each job just before starting event loop  ------------
 	void 
 ZPKUTreeMaker::beginJob()
 {
+//	std::cout << "ZPKUTreeMaker beginJob()..." << std::endl;
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
+//	std::cout << "ZPKUTreeMaker beginRun()..." << std::endl;
 
 	elPaths1.clear();
 	elPaths2.clear();
@@ -1897,6 +1734,7 @@ void ZPKUTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup
 
 void ZPKUTreeMaker::endRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
 {
+	std::cout << "ZPKUTreeMaker endRun()..." << std::endl;
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
