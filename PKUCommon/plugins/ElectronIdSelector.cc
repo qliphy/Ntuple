@@ -199,9 +199,10 @@ void ElectronIdSelector::produce(edm::Event& iEvent,const edm::EventSetup& iSetu
 //    else isolation = pfIso03EA;
 
     // -------- Compute ID ------
-    double sigmaIEtaIEta   = ele.sigmaIetaIeta();
+    double sigmaIEtaIEta   = ele.full5x5_sigmaIetaIeta();
     double dPhiIn    = fabs(ele.deltaPhiSuperClusterTrackAtVtx());
-    double dEtaIn    = fabs(ele.deltaEtaSuperClusterTrackAtVtx());
+//    double dEtaIn    = fabs(ele.deltaEtaSuperClusterTrackAtVtx());
+    double dEtaIn    = fabs(ele.deltaEtaSuperClusterTrackAtVtx()-ele.superCluster()->eta() + ele.superCluster()->seed()->eta());
     double hoe     = ele.hadronicOverEm();
     double ooemoop = fabs((1.0/ele.ecalEnergy() - ele.eSuperClusterOverP()/ele.ecalEnergy()));
 
