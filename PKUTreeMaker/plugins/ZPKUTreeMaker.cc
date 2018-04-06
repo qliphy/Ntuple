@@ -649,7 +649,7 @@ void ZPKUTreeMaker::addTypeICorr( edm::Event const & event ){
 	std::string skipMuonSelection_string = "isGlobalMuon | isStandAloneMuon";
 	StringCutObjectSelector<reco::Candidate>* skipMuonSelection_ = new StringCutObjectSelector<reco::Candidate>(skipMuonSelection_string,true);
 	double jetCorrEtaMax_           = 9.9;
-	double type1JetPtThreshold_     = 10.0;
+	double type1JetPtThreshold_     = 15.0;
 	double corrEx    = 0;
 	double corrEy    = 0;
 	double corrSumEt = 0;
@@ -1155,7 +1155,7 @@ ZPKUTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 		double phosc_eta=pho->superCluster()->eta();
 		double phosc_phi=pho->superCluster()->phi();
-		double pho_ieie=(*photons)[ip].sigmaIetaIeta();//(*full5x5SigmaIEtaIEtaMap)[pho];
+		double pho_ieie=(*photons)[ip].full5x5_sigmaIetaIeta();//(*full5x5SigmaIEtaIEtaMap)[pho];
 		double chIso1 = (*photons)[ip].chargedHadronIso();// (*phoChargedIsolationMap)[pho];
 		double nhIso1 = (*photons)[ip].neutralHadronIso();// (*phoNeutralHadronIsolationMap)[pho];
 		double phIso1 = (*photons)[ip].photonIso();//(*phoPhotonIsolationMap)[pho];
