@@ -4,7 +4,7 @@ process = cms.Process("PATUPDATE")
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
 process.source = cms.Source("PoolSource",
-  fileNames = cms.untracked.vstring(["file:/eos/uscms/store/mc/RunIISummer16MiniAODv2/TprimeTprimeToTHTH_HToGammaGamma_M-900_TuneCUETP8M2T4_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/60000/60231C0F-9FD8-E611-8EE2-001E67444EAC.root"])
+  fileNames = cms.untracked.vstring(["file:/eos/uscms/store/mc/RunIISummer16MiniAODv2/TprimeTprimeToTHTH_HToGammaGamma_M-900_TuneCUETP8M2T4_13TeV-madgraph-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v2/60000/60231C0F-9FD8-E611-8EE2-00167444EAC.root"])
 )
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
